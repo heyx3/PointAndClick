@@ -8,7 +8,7 @@ using System.Collections;
 public class PlayerController : MonoBehaviour
 {
 	public GameObject IdleAnim, WalkLeftAnim, WalkRightAnim;
-	public GameObject CurrentlyActiveAnim = null;
+	[System.NonSerialized]public GameObject CurrentlyActiveAnim = null;
 
 
 	public void SwitchToIdleAnim()
@@ -37,10 +37,5 @@ public class PlayerController : MonoBehaviour
 	void Awake()
 	{
 		SwitchToIdleAnim();
-	}
-
-	void Update()
-	{
-		
 	}
 }
