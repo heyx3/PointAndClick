@@ -1,10 +1,8 @@
 fileFormatVersion: 2
-guid: dcff2285917062b43a4c9a137baef31f
+guid: bee8311e3f2cd2e488f72dea0aa2cf52
 TextureImporter:
   fileIDToRecycleName:
-    21300000: PlayerIdle
-    21300002: PlayerIdle_0
-    21300004: PlayerIdle_1
+    21300000: Phone
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -34,7 +32,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -45,26 +43,6 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites:
-    - name: PlayerIdle_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 64
-        width: 128
-        height: 64
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: PlayerIdle_1
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 128
-        height: 64
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+    sprites: []
   spritePackingTag: 
   userData: 
