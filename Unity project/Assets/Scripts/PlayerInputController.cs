@@ -8,7 +8,13 @@ using System.Collections.Generic;
 [RequireComponent(typeof(PlayerAnimationController))]
 public class PlayerInputController : MonoBehaviour
 {
+	/// <summary>
+	/// The container that all clickable objects should be inside.
+	/// </summary>
 	public Transform ClickableObjectsContainer = null;
+	/// <summary>
+	/// The prefab for the indicator when the player tells the character where to move.
+	/// </summary>
 	public GameObject TargetPosIndicatorPrefab = null;
 
 	/// <summary>
