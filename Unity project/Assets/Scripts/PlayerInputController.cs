@@ -84,12 +84,13 @@ public class PlayerInputController : MonoBehaviour
 		}
 	}
 
-	private void GenerateTargetPosIndicator(float x)
+	private Transform GenerateTargetPosIndicator(float x)
 	{
 		if (targetPosIndicator == null)
 			targetPosIndicator = ((GameObject)Instantiate(TargetPosIndicatorPrefab)).transform;
 
 		targetPosIndicator.position = new Vector3(x, targetPosIndicator.position.y, targetPosIndicator.position.z);
+		return targetPosIndicator;
 	}
 	void Update()
 	{
@@ -97,27 +98,45 @@ public class PlayerInputController : MonoBehaviour
 		if (Input.GetMouseButton(0))
 		{
 			Vector2 mouse = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+			Vector2 worldMouse = new Vector2((Screen.width * -0.5f) + Mathf.Clamp(mouse.x, 0.0f, Screen.width),
+											 (Screen.height * -0.5f) + Mathf.Clamp(mouse.y, 0.0f, Screen.height));
+			bool foundClick = false;
 
 			//First see if any objects were clicked on.
 			foreach (ClickableObject co in ClickableObjects)
 			{
-				if (co.MyCollider.OverlapPoint(mouse))
+				if (co.MyCollider.OverlapPoint(worldMouse))
 				{
 					co.OnClicked(mouse);
-					return;
+					foundClick = true;
+					break;
 				}
 			}
 
 			//Next see if the cell phone was clicked on.
-			if (CellPhone.Instance != null && CellPhone.Instance.MyCollider.OverlapPoint(mouse))
+			if (CellPhone.Instance != null)
 			{
-				CellPhone.Instance.OnClicked(mouse);
-				return;
+				if (foundClick)
+				{
+					CellPhone.Instance.OnClickedOff(worldMouse);
+				}
+				else if (CellPhone.Instance.MyCollider.OverlapPoint(worldMouse))
+				{
+					CellPhone.Instance.OnClickedOn(worldMouse);
+					foundClick = true;
+				}
+				else if (CellPhone.Instance.IsUp)
+				{
+					CellPhone.Instance.OnClickedOff(worldMouse);
+					foundClick = true;
+				}
 			}
 
 			//Finally, just interpret the mouse click as a movement input.
-			float worldX = (Screen.width * -0.5f) + Mathf.Clamp(mouse.x, 0.0f, Screen.width);
-			GenerateTargetPosIndicator(worldX);
+			if (!foundClick)
+			{
+				GenerateTargetPosIndicator(worldMouse.x);
+			}
 		}
 
 

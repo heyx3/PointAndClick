@@ -9,50 +9,40 @@ public class CPState_MainScreen : CPState_Base
 	/// </summary>
 	/// <param name="pos">The position of the button as an interpolant between 0 and 1.</param>
 	/// <returns>Whether the button was pressed.</returns>
-	private bool Button(Vector2 pos, Texture2D tex)
+	private bool MainScreenButton(Vector2 posLerp, Texture2D tex, ButtonPositioningData data)
 	{
-		Vector3 phoneScreenPos = WorldCam.WorldToScreenPoint(Cellphone.MyTransform.position);
-		Vector2 phoneHalfSize = Cellphone.MySprite.bounds.extents;
-		Vector2 minPos = new Vector2(phoneScreenPos.x - phoneHalfSize.x + Cellphone.SpriteBorderSize.x,
-									 phoneScreenPos.y - phoneHalfSize.y + Cellphone.SpriteBorderSize.y),
-				maxPos = new Vector2(phoneScreenPos.x + phoneHalfSize.x - Cellphone.SpriteBorderSize.x,
-									 phoneScreenPos.y - phoneHalfSize.y - Cellphone.SpriteBorderSize.y);
-		Vector2 buttonPos = new Vector2(Mathf.Lerp(minPos.x, maxPos.x, pos.x),
-										Mathf.Lerp(minPos.y, maxPos.y, pos.y));
-		Rect guiArea = new Rect(buttonPos.x - (0.5f * Cellphone.MainScreenButtonSize.x),
-								buttonPos.y - (0.5f * Cellphone.MainScreenButtonSize.y),
-								Cellphone.MainScreenButtonSize.x, Cellphone.MainScreenButtonSize.y);
-
-		return GUI.Button(guiArea, tex, Cellphone.ButtonStyle);
+		return GUIButton(posLerp, Cellphone.MainScreenButtonSize, data, Cellphone.ButtonStyle, tex);
 	}
-	public override CPState_Base Update()
+	public override CPState_Base OnGUI()
 	{
 		//The screen buttons are arranged on a 3x4 grid.
 		float[] Xs = { 0.0f, 0.5f, 1.0f },
-				Ys = { 0.0f, 0.33333f, 0.666666f, 1.0f };
-		if (Button(new Vector2(Xs[0], Ys[0]), Cellphone.CallButtonTex))
+				Ys = { 1.0f, 0.33333f, 0.666666f, 0.0f };
+		ButtonPositioningData data = new ButtonPositioningData(WorldCam);
+
+		if (MainScreenButton(new Vector2(Xs[0], Ys[0]), Cellphone.CallButtonTex, data))
 			;
-		if (Button(new Vector2(Xs[1], Ys[0]), Cellphone.ContactsButtonTex))
+		if (MainScreenButton(new Vector2(Xs[1], Ys[0]), Cellphone.ContactsButtonTex, data))
 			;
-		if (Button(new Vector2(Xs[2], Ys[0]), Cellphone.InternetButtonTex))
+		if (MainScreenButton(new Vector2(Xs[2], Ys[0]), Cellphone.InternetButtonTex, data))
 			;
-		if (Button(new Vector2(Xs[0], Ys[1]), Cellphone.MessengerButtonTex))
+		if (MainScreenButton(new Vector2(Xs[0], Ys[1]), Cellphone.MessengerButtonTex, data))
 			;
-		if (Button(new Vector2(Xs[1], Ys[1]), Cellphone.ChatButtonTex))
+		if (MainScreenButton(new Vector2(Xs[1], Ys[1]), Cellphone.ChatButtonTex, data))
 			;
-		if (Button(new Vector2(Xs[2], Ys[1]), Cellphone.MapsButtonTex))
+		if (MainScreenButton(new Vector2(Xs[2], Ys[1]), Cellphone.MapsButtonTex, data))
 			;
-		if (Button(new Vector2(Xs[0], Ys[2]), Cellphone.FilesButtonTex))
+		if (MainScreenButton(new Vector2(Xs[0], Ys[2]), Cellphone.FilesButtonTex, data))
 			;
-		if (Button(new Vector2(Xs[1], Ys[2]), Cellphone.FlashlightButtonTex))
+		if (MainScreenButton(new Vector2(Xs[1], Ys[2]), Cellphone.FlashlightButtonTex, data))
 			;
-		if (Button(new Vector2(Xs[2], Ys[2]), Cellphone.WeatherButtonTex))
+		if (MainScreenButton(new Vector2(Xs[2], Ys[2]), Cellphone.WeatherButtonTex, data))
 			;
-		if (Button(new Vector2(Xs[0], Ys[3]), Cellphone.DatingButtonTex))
+		if (MainScreenButton(new Vector2(Xs[0], Ys[3]), Cellphone.DatingButtonTex, data))
 			;
-		if (Button(new Vector2(Xs[1], Ys[3]), Cellphone.CalendarButtonTex))
+		if (MainScreenButton(new Vector2(Xs[1], Ys[3]), Cellphone.CalendarButtonTex, data))
 			;
-		if (Button(new Vector2(Xs[2], Ys[3]), Cellphone.SettingsButtonTex))
+		if (MainScreenButton(new Vector2(Xs[2], Ys[3]), Cellphone.SettingsButtonTex, data))
 			;
 
 		return this;

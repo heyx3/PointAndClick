@@ -42,37 +42,61 @@ public class CellPhone : MonoBehaviour
 	/// <summary>
 	/// The current state of this cell phone (i.e. what screen it's on).
 	/// </summary>
-	[NonSerialized]public CPState_Base CurrentState { get; set; }
+	public CPState_Base CurrentState { get; set; }
 	/// <summary>
 	/// The position of this cell phone when it's not in use.
 	/// </summary>
-	public Vector2 StartingPosition { get; private set; }
+	public Vector3 StartingPosition { get; private set; }
+	/// <summary>
+	/// Whether this Cell Phone is currently active.
+	/// </summary>
+	public bool IsUp { get { return CurrentState != null; } }
 
 
 	void Awake()
 	{
 		MyCollider = collider2D;
+		MySprite = GetComponent<SpriteRenderer>().sprite;
+		MyTransform = transform;
 
 		if (Instance != null)
 		{
 			Debug.LogError("There is more than one CellPhone component: one in the '" + gameObject.name +
 						       "' object and one in the '" + Instance.gameObject.name + "' object'");
 		}
+		Instance = this;
 
 		CurrentState = null;
-		MyTransform = transform;
-		StartingPosition = new Vector2(MyTransform.position.x, MyTransform.position.y);
+		StartingPosition = MyTransform.position;
+	}
+	void OnGUI()
+	{
+		if (CurrentState != null)
+			CurrentState = CurrentState.OnGUI();
 	}
 
 	/// <summary>
 	/// Should be raised when this phone is clicked on (PlayerInputController handles clicking inputs).
 	/// </summary>
-	public void OnClicked(Vector2 mousePos)
+	public void OnClickedOn(Vector2 mousePos)
 	{
-		if (CurrentState == null)
+		if (!IsUp)
 		{
-			MyTransform.position = VisiblePosition;
+			MyTransform.position = new Vector3(VisiblePosition.x, VisiblePosition.y, MyTransform.position.z);
 			CurrentState = new CPState_MainScreen();
+		}
+	}
+	/// <summary>
+	/// Should be raised when the mouse clicks somewhere that ISN'T this phone
+	/// (PlayerInputController handles clicking inputs).
+	/// </summary>
+	public void OnClickedOff(Vector2 mousePos)
+	{
+		if (IsUp)
+		{
+			CurrentState.OnInterrupt();
+			CurrentState = null;
+			MyTransform.position = StartingPosition;
 		}
 	}
 }
