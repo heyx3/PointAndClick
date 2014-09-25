@@ -16,6 +16,7 @@ public class CellPhone : MonoBehaviour
 	static public CellPhone Instance { get; private set; }
 
 
+	public Texture2D CellPhoneTex;
 	public GUIStyle SmallTextStyle, LargeTextStyle, ButtonStyle;
 	public Texture2D CallButtonTex, ContactsButtonTex, InternetButtonTex, MessengerButtonTex,
 					 ChatButtonTex, MapsButtonTex, FilesButtonTex, FlashlightButtonTex,
@@ -34,10 +35,6 @@ public class CellPhone : MonoBehaviour
 	/// Calculated on Awake().
 	/// </summary>
 	public Transform MyTransform { get; private set; }
-	/// <summary>
-	/// This phone's sprite.
-	/// </summary>
-	public Sprite MySprite { get; private set; }
 
 	/// <summary>
 	/// The current state of this cell phone (i.e. what screen it's on).
@@ -53,10 +50,33 @@ public class CellPhone : MonoBehaviour
 	public bool IsUp { get { return CurrentState != null; } }
 
 
+	/// <summary>
+	/// Performs a lot of calculations to get the min/max position available
+	/// for buttons on the phone screen (in GUI space).
+	/// </summary>
+	public class ButtonPositioningData
+	{
+		public Vector2 MinPos, MaxPos;
+		public ButtonPositioningData(Camera worldCam)
+		{
+			Vector3 screenPos = worldCam.WorldToScreenPoint(CellPhone.Instance.MyTransform.position);
+			Vector2 size = new Vector2(CellPhone.Instance.CellPhoneTex.width,
+									   CellPhone.Instance.CellPhoneTex.height),
+					halfSize = 0.5f * size;
+			MinPos = new Vector2(screenPos.x - halfSize.x + CellPhone.Instance.SpriteBorderSize.x,
+								 screenPos.y - halfSize.y + CellPhone.Instance.SpriteBorderSize.y);
+			MaxPos = new Vector2(screenPos.x + halfSize.x - CellPhone.Instance.SpriteBorderSize.x,
+								 screenPos.y + halfSize.y -	CellPhone.Instance.SpriteBorderSize.y);
+
+			MinPos.y = Screen.height - MinPos.y;
+			MaxPos.y = Screen.height - MaxPos.y;
+		}
+	}
+
+
 	void Awake()
 	{
 		MyCollider = collider2D;
-		MySprite = GetComponent<SpriteRenderer>().sprite;
 		MyTransform = transform;
 
 		if (Instance != null)
@@ -71,8 +91,20 @@ public class CellPhone : MonoBehaviour
 	}
 	void OnGUI()
 	{
+		ButtonPositioningData data = new ButtonPositioningData(MainCamera.Instance);
+		Vector2 center = (data.MinPos + data.MaxPos) * 0.5f;
+
+		GUI.DrawTexture(new Rect(center.x - (CellPhoneTex.width * 0.5f),
+								 center.y - (CellPhoneTex.height * 0.5f),
+								 CellPhoneTex.width, CellPhoneTex.height),
+						CellPhoneTex, ScaleMode.StretchToFill, true);
+
 		if (CurrentState != null)
-			CurrentState = CurrentState.OnGUI();
+		{
+			CurrentState = CurrentState.OnGUI(data);
+			if (CurrentState == null)
+				MyTransform.position = StartingPosition;
+		}
 	}
 
 	/// <summary>

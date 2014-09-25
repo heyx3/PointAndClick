@@ -8,6 +8,9 @@ using System.Collections.Generic;
 [RequireComponent(typeof(PlayerAnimationController))]
 public class PlayerInputController : MonoBehaviour
 {
+	public static PlayerInputController Instance { get; private set; }
+
+
 	/// <summary>
 	/// The container that all clickable objects should be inside.
 	/// </summary>
@@ -18,6 +21,11 @@ public class PlayerInputController : MonoBehaviour
 	public GameObject TargetPosIndicatorPrefab = null;
 
 	/// <summary>
+	/// The flashlight light cone.
+	/// </summary>
+	public Transform FlashlightCone = null;
+
+	/// <summary>
 	/// The player's walking speed.
 	/// </summary>
 	public float WalkSpeed = 40.0f;
@@ -25,6 +33,8 @@ public class PlayerInputController : MonoBehaviour
 	/// The distance to the target pos at which the player stops moving.
 	/// </summary>
 	public float MaxDistToTarget = 5.0f;
+
+	public bool IsUsingFlashlight = false;
 
 
 	/// <summary>
@@ -62,12 +72,18 @@ public class PlayerInputController : MonoBehaviour
 	/// A cached reference to this player's transform.
 	/// </summary>
 	public Transform MyTransform { get; private set; }
+	/// <summary>
+	/// Whether the mouse was clicked last frame.
+	/// </summary>
+	public bool MousePressedLastFrame { get; private set; }
 
 	private Transform targetPosIndicator = null;
 
 
 	void Awake()
 	{
+		MousePressedLastFrame = false;
+
 		MyAnimations = GetComponent<PlayerAnimationController>();
 		MyTransform = transform;
 
@@ -82,6 +98,13 @@ public class PlayerInputController : MonoBehaviour
 						       gameObject.name + "' is null");
 			return;
 		}
+		if (Instance != null)
+		{
+			Debug.LogError("There is more than one player in the scene!");
+			return;
+		}
+
+		Instance = this;
 	}
 
 	private Transform GenerateTargetPosIndicator(float x)
@@ -95,7 +118,8 @@ public class PlayerInputController : MonoBehaviour
 	void Update()
 	{
 		//First update mouse input.
-		if (Input.GetMouseButton(0))
+		bool mouseThisFrame = Input.GetMouseButton(0);
+		if (mouseThisFrame && !MousePressedLastFrame)
 		{
 			Vector2 mouse = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
 			Vector2 worldMouse = new Vector2((Screen.width * -0.5f) + Mathf.Clamp(mouse.x, 0.0f, Screen.width),
@@ -123,6 +147,7 @@ public class PlayerInputController : MonoBehaviour
 				else if (CellPhone.Instance.MyCollider.OverlapPoint(worldMouse))
 				{
 					CellPhone.Instance.OnClickedOn(worldMouse);
+					IsUsingFlashlight = false;
 					foundClick = true;
 				}
 				else if (CellPhone.Instance.IsUp)
@@ -138,31 +163,30 @@ public class PlayerInputController : MonoBehaviour
 				GenerateTargetPosIndicator(worldMouse.x);
 			}
 		}
+		MousePressedLastFrame = mouseThisFrame;
 
 
 		//Now update the movement logic.
 		if (targetPosIndicator == null)
 		{
-			MyAnimations.SwitchToIdleAnim();
+			MyAnimations.SwitchToIdleAnim(MyAnimations.IsFacingRight);
 		}
 		else
 		{
 			float towardsTarget = targetPosIndicator.position.x - MyTransform.position.x;
 			if (Mathf.Abs(towardsTarget) < MaxDistToTarget)
 			{
-				MyAnimations.SwitchToIdleAnim();
+				MyAnimations.SwitchToIdleAnim(MyAnimations.IsFacingRight);
 				if (targetPosIndicator != null) Destroy(targetPosIndicator.gameObject);
-			}
-			else if (towardsTarget < 0.0f)
-			{
-				MyAnimations.SwitchToWalkLeftAnim();
-				MyTransform.position += new Vector3(-WalkSpeed * Time.deltaTime, 0.0f, 0.0f);
 			}
 			else
 			{
-				MyAnimations.SwitchToWalkRightAnim();
-				MyTransform.position += new Vector3(WalkSpeed * Time.deltaTime, 0.0f, 0.0f);
+				MyAnimations.SwitchToWalkAnim(towardsTarget > 0.0f);
+				MyTransform.position += new Vector3(WalkSpeed * Mathf.Sign(towardsTarget) * Time.deltaTime, 0.0f, 0.0f);
 			}
 		}
+
+		//Update flashlight behavior.
+		FlashlightCone.gameObject.SetActive(IsUsingFlashlight);
 	}
 }
