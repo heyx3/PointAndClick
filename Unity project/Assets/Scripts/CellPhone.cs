@@ -21,8 +21,10 @@ public class CellPhone : MonoBehaviour
 	public Texture2D CallButtonTex, ContactsButtonTex, InternetButtonTex, MessengerButtonTex,
 					 ChatButtonTex, MapsButtonTex, FilesButtonTex, FlashlightButtonTex,
 					 WeatherButtonTex, DatingButtonTex, CalendarButtonTex, SettingsButtonTex;
+	public Texture2D OfflineTex;
 	public Vector2 VisiblePosition;
-	public Vector2 SpriteBorderSize, MainScreenButtonSize;
+	public Vector2 MainScreenSpriteBorderSize, OfflineSpriteBorderSize,
+				   MainScreenButtonSize;
 
 
 	/// <summary>
@@ -63,10 +65,8 @@ public class CellPhone : MonoBehaviour
 			Vector2 size = new Vector2(CellPhone.Instance.CellPhoneTex.width,
 									   CellPhone.Instance.CellPhoneTex.height),
 					halfSize = 0.5f * size;
-			MinPos = new Vector2(screenPos.x - halfSize.x + CellPhone.Instance.SpriteBorderSize.x,
-								 screenPos.y - halfSize.y + CellPhone.Instance.SpriteBorderSize.y);
-			MaxPos = new Vector2(screenPos.x + halfSize.x - CellPhone.Instance.SpriteBorderSize.x,
-								 screenPos.y + halfSize.y -	CellPhone.Instance.SpriteBorderSize.y);
+			MinPos = new Vector2(screenPos.x - halfSize.x, screenPos.y - halfSize.y);
+			MaxPos = new Vector2(screenPos.x + halfSize.x, screenPos.y + halfSize.y);
 
 			MinPos.y = Screen.height - MinPos.y;
 			MaxPos.y = Screen.height - MaxPos.y;

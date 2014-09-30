@@ -30,10 +30,15 @@ public abstract class CPState_Base
 	/// <param name="posLerp">Values between 0 and 1 representing where on the screen the button is.</param>
 	protected bool GUIButton(Vector2 posLerp, Vector2 buttonSize,
 							 CellPhone.ButtonPositioningData data,
+							 Vector2 border,
 							 GUIStyle style, Texture2D tex)
 	{
-		Vector2 buttonPos = new Vector2(Mathf.Lerp(data.MinPos.x, data.MaxPos.x, posLerp.x),
-										Mathf.Lerp(data.MinPos.y, data.MaxPos.y, posLerp.y));
+		Vector2 buttonPos = new Vector2(Mathf.Lerp(data.MinPos.x + border.x,
+												   data.MaxPos.x - border.x,
+												   posLerp.x),
+										Mathf.Lerp(data.MinPos.y + border.y,
+												   data.MaxPos.y - border.y,
+												   posLerp.y));
 		Rect guiArea = new Rect(buttonPos.x - (0.5f * buttonSize.x),
 								buttonPos.y - (0.5f * buttonSize.y),
 								buttonSize.x, buttonSize.y);

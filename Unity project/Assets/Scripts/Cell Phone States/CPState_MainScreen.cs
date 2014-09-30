@@ -11,7 +11,8 @@ public class CPState_MainScreen : CPState_Base
 	/// <returns>Whether the button was pressed.</returns>
 	private bool MainScreenButton(Vector2 posLerp, Texture2D tex, CellPhone.ButtonPositioningData data)
 	{
-		return GUIButton(posLerp, Cellphone.MainScreenButtonSize, data, Cellphone.ButtonStyle, tex);
+		return GUIButton(posLerp, Cellphone.MainScreenButtonSize, data,
+						 Cellphone.MainScreenSpriteBorderSize, Cellphone.ButtonStyle, tex);
 	}
 	public override CPState_Base OnGUI(CellPhone.ButtonPositioningData data)
 	{
@@ -24,13 +25,13 @@ public class CPState_MainScreen : CPState_Base
 		if (MainScreenButton(new Vector2(Xs[1], Ys[0]), Cellphone.ContactsButtonTex, data))
 			;
 		if (MainScreenButton(new Vector2(Xs[2], Ys[0]), Cellphone.InternetButtonTex, data))
-			;
+			return new CPState_Offline();
 		if (MainScreenButton(new Vector2(Xs[0], Ys[1]), Cellphone.MessengerButtonTex, data))
 			;
 		if (MainScreenButton(new Vector2(Xs[1], Ys[1]), Cellphone.ChatButtonTex, data))
-			;
+			return new CPState_Offline();
 		if (MainScreenButton(new Vector2(Xs[2], Ys[1]), Cellphone.MapsButtonTex, data))
-			;
+			return new CPState_Offline();
 		if (MainScreenButton(new Vector2(Xs[0], Ys[2]), Cellphone.FilesButtonTex, data))
 			;
 		if (MainScreenButton(new Vector2(Xs[1], Ys[2]), Cellphone.FlashlightButtonTex, data))
@@ -39,7 +40,7 @@ public class CPState_MainScreen : CPState_Base
 			return null;
 		}
 		if (MainScreenButton(new Vector2(Xs[2], Ys[2]), Cellphone.WeatherButtonTex, data))
-			;
+			return new CPState_Offline();
 		if (MainScreenButton(new Vector2(Xs[0], Ys[3]), Cellphone.DatingButtonTex, data))
 			;
 		if (MainScreenButton(new Vector2(Xs[1], Ys[3]), Cellphone.CalendarButtonTex, data))
