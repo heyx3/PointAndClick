@@ -11,8 +11,8 @@ public class CPState_MainScreen : CPState_Base
 	/// <returns>Whether the button was pressed.</returns>
 	private bool MainScreenButton(Vector2 posLerp, Texture2D tex, CellPhone.ButtonPositioningData data)
 	{
-		return GUIButton(posLerp, Cellphone.MainScreenButtonSize, data,
-						 Cellphone.MainScreenSpriteBorderSize, Cellphone.ButtonStyle, tex);
+		return GUIButton(posLerp, Cellphone.MainScreen.ButtonSize, data,
+						 Cellphone.MainScreen.ScreenBorder, Cellphone.ButtonStyle, tex);
 	}
 	public override CPState_Base OnGUI(CellPhone.ButtonPositioningData data)
 	{
@@ -20,32 +20,32 @@ public class CPState_MainScreen : CPState_Base
 		float[] Xs = { 0.0f, 0.5f, 1.0f },
 				Ys = { 1.0f, 0.33333f, 0.666666f, 0.0f };
 
-		if (MainScreenButton(new Vector2(Xs[0], Ys[0]), Cellphone.CallButtonTex, data))
+		if (MainScreenButton(new Vector2(Xs[0], Ys[0]), Cellphone.MainScreen.CallButtonTex, data))
 			;
-		if (MainScreenButton(new Vector2(Xs[1], Ys[0]), Cellphone.ContactsButtonTex, data))
+		if (MainScreenButton(new Vector2(Xs[1], Ys[0]), Cellphone.MainScreen.ContactsButtonTex, data))
 			;
-		if (MainScreenButton(new Vector2(Xs[2], Ys[0]), Cellphone.InternetButtonTex, data))
+		if (MainScreenButton(new Vector2(Xs[2], Ys[0]), Cellphone.MainScreen.InternetButtonTex, data))
 			return new CPState_Offline();
-		if (MainScreenButton(new Vector2(Xs[0], Ys[1]), Cellphone.MessengerButtonTex, data))
+		if (MainScreenButton(new Vector2(Xs[0], Ys[1]), Cellphone.MainScreen.MessengerButtonTex, data))
 			return new CPState_Messenger();
-		if (MainScreenButton(new Vector2(Xs[1], Ys[1]), Cellphone.ChatButtonTex, data))
+		if (MainScreenButton(new Vector2(Xs[1], Ys[1]), Cellphone.MainScreen.ChatButtonTex, data))
 			return new CPState_Offline();
-		if (MainScreenButton(new Vector2(Xs[2], Ys[1]), Cellphone.MapsButtonTex, data))
+		if (MainScreenButton(new Vector2(Xs[2], Ys[1]), Cellphone.MainScreen.MapsButtonTex, data))
 			return new CPState_Offline();
-		if (MainScreenButton(new Vector2(Xs[0], Ys[2]), Cellphone.FilesButtonTex, data))
+		if (MainScreenButton(new Vector2(Xs[0], Ys[2]), Cellphone.MainScreen.FilesButtonTex, data))
 			;
-		if (MainScreenButton(new Vector2(Xs[1], Ys[2]), Cellphone.FlashlightButtonTex, data))
+		if (MainScreenButton(new Vector2(Xs[1], Ys[2]), Cellphone.MainScreen.FlashlightButtonTex, data))
 		{
 			PlayerInputController.Instance.IsUsingFlashlight = !PlayerInputController.Instance.IsUsingFlashlight;
 			return null;
 		}
-		if (MainScreenButton(new Vector2(Xs[2], Ys[2]), Cellphone.WeatherButtonTex, data))
+		if (MainScreenButton(new Vector2(Xs[2], Ys[2]), Cellphone.MainScreen.WeatherButtonTex, data))
 			return new CPState_Offline();
-		if (MainScreenButton(new Vector2(Xs[0], Ys[3]), Cellphone.DatingButtonTex, data))
+		if (MainScreenButton(new Vector2(Xs[0], Ys[3]), Cellphone.MainScreen.DatingButtonTex, data))
 			;
-		if (MainScreenButton(new Vector2(Xs[1], Ys[3]), Cellphone.CalendarButtonTex, data))
+		if (MainScreenButton(new Vector2(Xs[1], Ys[3]), Cellphone.MainScreen.CalendarButtonTex, data))
 			;
-		if (MainScreenButton(new Vector2(Xs[2], Ys[3]), Cellphone.SettingsButtonTex, data))
+		if (MainScreenButton(new Vector2(Xs[2], Ys[3]), Cellphone.MainScreen.SettingsButtonTex, data))
 			;
 
 		return this;

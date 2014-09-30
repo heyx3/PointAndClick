@@ -9,7 +9,7 @@ public class CPState_Offline : CPState_Base
 {
 	public override CPState_Base OnGUI(CellPhone.ButtonPositioningData data)
 	{
-		GUIBackground(data, Cellphone.OfflineBackground);
+		GUIBackground(data, Cellphone.OfflineScreen.Background);
 		return this;
 	}
 }
