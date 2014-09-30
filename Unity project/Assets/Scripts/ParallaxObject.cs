@@ -19,7 +19,7 @@ public class ParallaxObject : MonoBehaviour
 	private Transform myTr;
 
 	
-	void Awake()
+	void Start()
 	{
 		lastPlayerPos = playerTr.position;
 		myTr = transform;
