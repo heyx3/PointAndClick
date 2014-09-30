@@ -27,7 +27,7 @@ public class CPState_MainScreen : CPState_Base
 		if (MainScreenButton(new Vector2(Xs[2], Ys[0]), Cellphone.InternetButtonTex, data))
 			return new CPState_Offline();
 		if (MainScreenButton(new Vector2(Xs[0], Ys[1]), Cellphone.MessengerButtonTex, data))
-			;
+			return new CPState_Messenger();
 		if (MainScreenButton(new Vector2(Xs[1], Ys[1]), Cellphone.ChatButtonTex, data))
 			return new CPState_Offline();
 		if (MainScreenButton(new Vector2(Xs[2], Ys[1]), Cellphone.MapsButtonTex, data))

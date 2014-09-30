@@ -45,4 +45,15 @@ public abstract class CPState_Base
 
 		return GUI.Button(guiArea, tex, style);
 	}
+	/// <summary>
+	/// Draws a background for this phone screen.
+	/// </summary>
+	protected void GUIBackground(CellPhone.ButtonPositioningData data, Texture2D tex)
+	{
+		GUI.DrawTexture(new Rect(data.MinPos.x + Cellphone.BackgroundSpriteBorderSize.x,
+								 data.MaxPos.y - Cellphone.BackgroundSpriteBorderSize.y,
+								 data.MaxPos.x - data.MinPos.x - (2.0f * Cellphone.BackgroundSpriteBorderSize.x),
+								 -data.MaxPos.y + data.MinPos.y + (2.0f * Cellphone.BackgroundSpriteBorderSize.y)),
+						tex);
+	}
 }

@@ -21,9 +21,9 @@ public class CellPhone : MonoBehaviour
 	public Texture2D CallButtonTex, ContactsButtonTex, InternetButtonTex, MessengerButtonTex,
 					 ChatButtonTex, MapsButtonTex, FilesButtonTex, FlashlightButtonTex,
 					 WeatherButtonTex, DatingButtonTex, CalendarButtonTex, SettingsButtonTex;
-	public Texture2D OfflineTex;
+	public Texture2D OfflineBackground, MessengerBackground;
 	public Vector2 VisiblePosition;
-	public Vector2 MainScreenSpriteBorderSize, OfflineSpriteBorderSize,
+	public Vector2 MainScreenSpriteBorderSize, BackgroundSpriteBorderSize,
 				   MainScreenButtonSize;
 
 
