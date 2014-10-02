@@ -188,5 +188,9 @@ public class PlayerInputController : MonoBehaviour
 
 		//Update flashlight behavior.
 		FlashlightCone.gameObject.SetActive(IsUsingFlashlight);
+
+		Vector3 pos = MyTransform.position;
+		pos.x = Mathf.RoundToInt (pos.x);
+		MyTransform.position = pos;
 	}
 }
