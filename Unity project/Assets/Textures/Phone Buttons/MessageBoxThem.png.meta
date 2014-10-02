@@ -1,8 +1,7 @@
 fileFormatVersion: 2
-guid: 355d3a612f74e224096bf95e3070f5d2
+guid: 279bf6b24deb7f942bb3fb519022edc3
 TextureImporter:
-  fileIDToRecycleName:
-    21300000: dating-icon
+  fileIDToRecycleName: {}
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -26,7 +25,7 @@ TextureImporter:
   maxTextureSize: 1024
   textureSettings:
     filterMode: 0
-    aniso: 7
+    aniso: -1
     mipBias: -1
     wrapMode: 1
   nPOTScale: 1

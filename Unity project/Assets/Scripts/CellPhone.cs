@@ -16,13 +16,46 @@ public class CellPhone : MonoBehaviour
 	static public CellPhone Instance { get; private set; }
 
 
+
+	#region Screen data structs
+
+	[Serializable]
+	public class MainScreenData
+	{
+		public Texture2D CallButtonTex, ContactsButtonTex, InternetButtonTex, MessengerButtonTex,
+						 ChatButtonTex, MapsButtonTex, FilesButtonTex, FlashlightButtonTex,
+						 WeatherButtonTex, DatingButtonTex, CalendarButtonTex, SettingsButtonTex;
+		public Vector2 ScreenBorder = new Vector2(15.43f, -33.93f);
+		public Vector2 ButtonSize;
+	}
+	[Serializable]
+	public class OfflineScreenData
+	{
+		public Texture2D Background;
+	}
+	[Serializable]
+	public class MessengerScreenData
+	{
+		public Texture2D Background;
+		public GUIStyle MessageBoxYou, MessageBoxThem;
+		public float MessageXOffsetLerp = 0.05f,
+					 MessageXBorderLerp = 0.0f;
+		public float FirstMessageYLerp = 0.2f,
+					 MessageSeparationLerp = 0.1f,
+					 MessageHeightLerp = 0.08f;
+	}
+
+	#endregion
+
+	public MainScreenData MainScreen;
+	public OfflineScreenData OfflineScreen;
+	public MessengerScreenData MessengerScreen;
+
 	public Texture2D CellPhoneTex;
 	public GUIStyle SmallTextStyle, LargeTextStyle, ButtonStyle;
-	public Texture2D CallButtonTex, ContactsButtonTex, InternetButtonTex, MessengerButtonTex,
-					 ChatButtonTex, MapsButtonTex, FilesButtonTex, FlashlightButtonTex,
-					 WeatherButtonTex, DatingButtonTex, CalendarButtonTex, SettingsButtonTex;
+
 	public Vector2 VisiblePosition;
-	public Vector2 SpriteBorderSize, MainScreenButtonSize;
+	public Vector2 BackgroundSpriteBorderSize;
 
 
 	/// <summary>
@@ -52,7 +85,7 @@ public class CellPhone : MonoBehaviour
 
 	/// <summary>
 	/// Performs a lot of calculations to get the min/max position available
-	/// for buttons on the phone screen (in GUI space).
+	/// for the phone in GUI space.
 	/// </summary>
 	public class ButtonPositioningData
 	{
@@ -63,10 +96,8 @@ public class CellPhone : MonoBehaviour
 			Vector2 size = new Vector2(CellPhone.Instance.CellPhoneTex.width,
 									   CellPhone.Instance.CellPhoneTex.height),
 					halfSize = 0.5f * size;
-			MinPos = new Vector2(screenPos.x - halfSize.x + CellPhone.Instance.SpriteBorderSize.x,
-								 screenPos.y - halfSize.y + CellPhone.Instance.SpriteBorderSize.y);
-			MaxPos = new Vector2(screenPos.x + halfSize.x - CellPhone.Instance.SpriteBorderSize.x,
-								 screenPos.y + halfSize.y -	CellPhone.Instance.SpriteBorderSize.y);
+			MinPos = new Vector2(screenPos.x - halfSize.x, screenPos.y - halfSize.y);
+			MaxPos = new Vector2(screenPos.x + halfSize.x, screenPos.y + halfSize.y);
 
 			MinPos.y = Screen.height - MinPos.y;
 			MaxPos.y = Screen.height - MaxPos.y;

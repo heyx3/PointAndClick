@@ -53,3 +53,6 @@ Unity project/Unity project.sln
 Unity project/Unity project.v12.suo
 Unity project/Library/InspectorExpandedItems.asset
 Unity project/Unity project-csharp.v12.suo
+Unity project/Library/ScriptMapper
+Unity project/Library/AssetServerCacheV3
+Unity project/Assembly-*.csproj

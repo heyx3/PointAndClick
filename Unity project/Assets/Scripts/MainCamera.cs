@@ -10,9 +10,14 @@ public class MainCamera : MonoBehaviour
 {
 	public static Camera Instance { get; private set; }
 
+
+	public Transform MyTransform { get; private set; }
+
+
 	void Awake()
 	{
 		Instance = camera;
+		MyTransform = transform;
 
 		//Make sure there aren't more of these.
 		foreach (MainCamera mc in FindObjectsOfType<MainCamera>())
@@ -23,5 +28,12 @@ public class MainCamera : MonoBehaviour
 				return;
 			}
 		}
+	}
+
+	void Update()
+	{
+		Vector3 pos = MyTransform.position,
+				playerPos = PlayerInputController.Instance.MyTransform.position;
+		MyTransform.position = new Vector3(playerPos.x, pos.y, pos.z);
 	}
 }
