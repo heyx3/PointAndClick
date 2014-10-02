@@ -65,6 +65,7 @@ public class PlayerAnimationController : MonoBehaviour
 			return;
 		}
 
+		IdleAnim.GetComponent<Animator>().speed = .5f;
 		SwitchToIdleAnim(IsFacingRight);
 	}
 }
