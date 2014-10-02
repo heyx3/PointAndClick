@@ -44,12 +44,30 @@ public class CellPhone : MonoBehaviour
 					 MessageSeparationLerp = 0.1f,
 					 MessageHeightLerp = 0.08f;
 	}
+	[Serializable]
+	public class CallsScreenData
+	{
+		public Texture2D Background;
+	}
+	[Serializable]
+	public class DatingScreenData
+	{
+		public Texture2D Background;
+	}
+	[Serializable]
+	public class ContactsScreenData
+	{
+		public Texture2D Background;
+	}
 
 	#endregion
 
 	public MainScreenData MainScreen;
 	public OfflineScreenData OfflineScreen;
 	public MessengerScreenData MessengerScreen;
+	public CallsScreenData CallsScreen;
+	public DatingScreenData DatingScreen;
+	public ContactsScreenData ContactsScreen;
 
 	public Texture2D CellPhoneTex;
 	public GUIStyle SmallTextStyle, LargeTextStyle, ButtonStyle;

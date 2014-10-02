@@ -21,17 +21,17 @@ public class CPState_MainScreen : CPState_Base
 				Ys = { 1.0f, 0.33333f, 0.666666f, 0.0f };
 
 		if (MainScreenButton(new Vector2(Xs[0], Ys[0]), Cellphone.MainScreen.CallButtonTex, data))
-			;
+			return new CPState_Static(Cellphone.CallsScreen.Background);
 		if (MainScreenButton(new Vector2(Xs[1], Ys[0]), Cellphone.MainScreen.ContactsButtonTex, data))
-			;
+			return new CPState_Static(Cellphone.ContactsScreen.Background);
 		if (MainScreenButton(new Vector2(Xs[2], Ys[0]), Cellphone.MainScreen.InternetButtonTex, data))
-			return new CPState_Offline();
+			return new CPState_Static(Cellphone.OfflineScreen.Background);
 		if (MainScreenButton(new Vector2(Xs[0], Ys[1]), Cellphone.MainScreen.MessengerButtonTex, data))
 			return new CPState_Messenger();
 		if (MainScreenButton(new Vector2(Xs[1], Ys[1]), Cellphone.MainScreen.ChatButtonTex, data))
-			return new CPState_Offline();
+			return new CPState_Static(Cellphone.OfflineScreen.Background);
 		if (MainScreenButton(new Vector2(Xs[2], Ys[1]), Cellphone.MainScreen.MapsButtonTex, data))
-			return new CPState_Offline();
+			return new CPState_Static(Cellphone.OfflineScreen.Background);
 		if (MainScreenButton(new Vector2(Xs[0], Ys[2]), Cellphone.MainScreen.FilesButtonTex, data))
 			;
 		if (MainScreenButton(new Vector2(Xs[1], Ys[2]), Cellphone.MainScreen.FlashlightButtonTex, data))
@@ -40,9 +40,9 @@ public class CPState_MainScreen : CPState_Base
 			return null;
 		}
 		if (MainScreenButton(new Vector2(Xs[2], Ys[2]), Cellphone.MainScreen.WeatherButtonTex, data))
-			return new CPState_Offline();
+			return new CPState_Static(Cellphone.OfflineScreen.Background);
 		if (MainScreenButton(new Vector2(Xs[0], Ys[3]), Cellphone.MainScreen.DatingButtonTex, data))
-			;
+			return new CPState_Static(Cellphone.DatingScreen.Background);
 		if (MainScreenButton(new Vector2(Xs[1], Ys[3]), Cellphone.MainScreen.CalendarButtonTex, data))
 			;
 		if (MainScreenButton(new Vector2(Xs[2], Ys[3]), Cellphone.MainScreen.SettingsButtonTex, data))
