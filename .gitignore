@@ -36,7 +36,6 @@ Icon
 
 
 #Unity files
-*.cs.meta
 Unity project/Library/metadata/*
 Unity project/Temp/*
 Unity project/obj/Debug/*
