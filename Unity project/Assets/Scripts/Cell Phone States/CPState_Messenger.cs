@@ -8,43 +8,35 @@ using UnityEngine;
 /// </summary>
 public class CPState_Messenger : CPState_Base
 {
-	public const int MaxMessages = 4;
 	private static CellPhone.MessengerScreenData ScreenDat { get { return CellPhone.Instance.MessengerScreen; } }
 
-	[Serializable]
-	public struct Message
-	{
-		public string Text;
-		public bool FromYou;
-		public Message(string text, bool fromYou) { Text = text; FromYou = fromYou; }
-	}
-	public static List<Message> Messages = new List<Message>();
+
+	/// <summary>
+	/// The most recent message that was sent. Set to -1 if no messages have been sent yet.
+	/// </summary>
+	public int CurrentMessage = -1;
 
 
 	public override CPState_Base OnGUI(CellPhone.ButtonPositioningData data)
 	{
+		Vector2 range = data.MaxPos - data.MinPos;
+
 		GUIBackground(data, ScreenDat.Background);
 
-		for (int i = MaxMessages - 1; i >= 0; --i) if (i < Messages.Count)
+		float y = ScreenDat.FirstMessageYLerp;
+		for (int i = CurrentMessage; i >= 0; --i)
 		{
-			int index = Messages.Count - 1 - i;
+			CellPhone.MessengerScreenData.Message msg = ScreenDat.Messages[i];
 
-			float x = ScreenDat.MessageXBorderLerp + ScreenDat.MessageXBorderLerp;
-			float width = 0.5f - x;
-			if (Messages[index].FromYou)
-			{
-				width = 0.5f - ScreenDat.MessageXBorderLerp - ScreenDat.MessageXOffsetLerp;
-				x = 0.5f;
-			}
-
-			float y = ScreenDat.FirstMessageYLerp + (i * ScreenDat.MessageSeparationLerp);
+			float x = ScreenDat.MessageXOffsetLerp;
+			if (msg.FromPlayer) x = 0.5f;
 
 			GUI.Box(new Rect(Mathf.Lerp(data.MinPos.x, data.MaxPos.x, x),
 							 Mathf.Lerp(data.MinPos.y, data.MaxPos.y, y),
-							 width * (data.MaxPos.x - data.MinPos.x),
-							 ScreenDat.MessageHeightLerp * (data.MaxPos.y - data.MinPos.y)),
-					Messages[index].Text,
-					(Messages[index].FromYou ? ScreenDat.MessageBoxYou : ScreenDat.MessageBoxThem));
+							 msg.Image.width, msg.Image.height),
+					msg.Image);
+
+			y += (msg.Image.height / range.y) + ScreenDat.MessageSeparationLerp;
 		}
 
 		return this;

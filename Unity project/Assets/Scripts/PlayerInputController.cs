@@ -121,9 +121,22 @@ public class PlayerInputController : MonoBehaviour
 		bool mouseThisFrame = Input.GetMouseButton(0);
 		if (mouseThisFrame && !MousePressedLastFrame)
 		{
-			Vector2 mouse = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-			Vector2 worldMouse = new Vector2((Screen.width * -0.5f) + Mathf.Clamp(mouse.x, 0.0f, Screen.width),
-											 (Screen.height * -0.5f) + Mathf.Clamp(mouse.y, 0.0f, Screen.height));
+			RenderTexture gameRend = MainCamera.Instance.targetTexture;
+
+			Vector2 mouse = new Vector2(Input.mousePosition.x, Input.mousePosition.y),
+					mouseLerp = new Vector2(mouse.x / (float)Screen.width, mouse.y / (float)Screen.height),
+					cameraViewSize = new Vector2(2.0f * MainCamera.Instance.orthographicSize *
+													(float)gameRend.width / gameRend.height,
+												 2.0f * MainCamera.Instance.orthographicSize),
+					camPos = new Vector2(MainCamera.Instance.transform.position.x,
+										 MainCamera.Instance.transform.position.y),
+					worldMouse = new Vector2(Mathf.Lerp(camPos.x - (cameraViewSize.x * 0.5f),
+														camPos.x + (cameraViewSize.x * 0.5f),
+														mouseLerp.x),
+											 Mathf.Lerp(camPos.y - (cameraViewSize.y * 0.5f),
+														camPos.y + (cameraViewSize.y * 0.5f),
+														mouseLerp.y));
+
 			bool foundClick = false;
 
 			//First see if any objects were clicked on.

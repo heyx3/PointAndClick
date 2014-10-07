@@ -30,8 +30,7 @@ public abstract class CPState_Base
 	/// <param name="posLerp">Values between 0 and 1 representing where on the screen the button is.</param>
 	protected bool GUIButton(Vector2 posLerp, Vector2 buttonSize,
 							 CellPhone.ButtonPositioningData data,
-							 Vector2 border,
-							 GUIStyle style, Texture2D tex)
+							 Vector2 border, GUIStyle style, Texture2D tex)
 	{
 		Vector2 buttonPos = new Vector2(Mathf.Lerp(data.MinPos.x + border.x,
 												   data.MaxPos.x - border.x,
@@ -39,11 +38,16 @@ public abstract class CPState_Base
 										Mathf.Lerp(data.MinPos.y + border.y,
 												   data.MaxPos.y - border.y,
 												   posLerp.y));
+
+		buttonSize.x *= data.ScreenSizeScale.x;
+		buttonSize.y *= data.ScreenSizeScale.y;
+
 		Rect guiArea = new Rect(buttonPos.x - (0.5f * buttonSize.x),
 								buttonPos.y - (0.5f * buttonSize.y),
 								buttonSize.x, buttonSize.y);
 
-		return GUI.Button(guiArea, tex, style);
+		GUI.DrawTexture(guiArea, tex);
+		return GUI.Button(guiArea, "", style);
 	}
 	/// <summary>
 	/// Draws a background for this phone screen.

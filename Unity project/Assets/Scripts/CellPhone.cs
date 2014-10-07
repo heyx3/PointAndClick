@@ -14,7 +14,10 @@ public class CellPhone : MonoBehaviour
 	/// A static reference to what should be the only instance of this object in the scene.
 	/// </summary>
 	static public CellPhone Instance { get; private set; }
-
+	/// <summary>
+	/// The texture that the game is being rendered to.
+	/// </summary>
+	static private RenderTexture GameRendTex { get { return MainCamera.Instance.targetTexture; } }
 
 
 	#region Screen data structs
@@ -37,12 +40,19 @@ public class CellPhone : MonoBehaviour
 	public class MessengerScreenData
 	{
 		public Texture2D Background;
-		public GUIStyle MessageBoxYou, MessageBoxThem;
-		public float MessageXOffsetLerp = 0.05f,
-					 MessageXBorderLerp = 0.0f;
+		public float MessageXOffsetLerp = 0.05f;
 		public float FirstMessageYLerp = 0.2f,
 					 MessageSeparationLerp = 0.1f,
 					 MessageHeightLerp = 0.08f;
+
+		[Serializable]
+		public class Message
+		{
+			public Texture2D Image;
+			public string MessageText;
+			public bool FromPlayer;
+		}
+		public Message[] Messages = new Message[0];
 	}
 	[Serializable]
 	public class CallsScreenData
@@ -72,7 +82,8 @@ public class CellPhone : MonoBehaviour
 	public Texture2D CellPhoneTex;
 	public GUIStyle SmallTextStyle, LargeTextStyle, ButtonStyle;
 
-	public Vector2 VisiblePosition;
+	public float DeSelectedHeight = -158.375f,
+				 SelectedHeight = -26.7f;
 	public Vector2 BackgroundSpriteBorderSize;
 
 
@@ -92,10 +103,6 @@ public class CellPhone : MonoBehaviour
 	/// </summary>
 	public CPState_Base CurrentState { get; set; }
 	/// <summary>
-	/// The position of this cell phone when it's not in use.
-	/// </summary>
-	public Vector3 StartingPosition { get; private set; }
-	/// <summary>
 	/// Whether this Cell Phone is currently active.
 	/// </summary>
 	public bool IsUp { get { return CurrentState != null; } }
@@ -108,12 +115,21 @@ public class CellPhone : MonoBehaviour
 	public class ButtonPositioningData
 	{
 		public Vector2 MinPos, MaxPos;
-		public ButtonPositioningData(Camera worldCam)
+		public Vector2 ScreenSizeScale;
+		public ButtonPositioningData()
 		{
-			Vector3 screenPos = worldCam.WorldToScreenPoint(CellPhone.Instance.MyTransform.position);
-			Vector2 size = new Vector2(CellPhone.Instance.CellPhoneTex.width,
-									   CellPhone.Instance.CellPhoneTex.height),
+			ScreenSizeScale = new Vector2((float)Screen.width / (float)GameRendTex.width,
+										  (float)Screen.height / (float)GameRendTex.height);
+			ScreenSizeScale *= ((float)GameRendTex.height * 0.5f) / MainCamera.Instance.orthographicSize;
+
+			Vector3 screenPos = MainCamera.Instance.WorldToScreenPoint(CellPhone.Instance.MyCollider.bounds.center);
+			screenPos.x *= ((float)Screen.width / (float)MainCamera.Instance.targetTexture.width);
+			screenPos.y *= ((float)Screen.height / (float)MainCamera.Instance.targetTexture.height);
+
+			Vector2 size = new Vector2(ScreenSizeScale.x * CellPhone.Instance.CellPhoneTex.width,
+									   ScreenSizeScale.y * CellPhone.Instance.CellPhoneTex.height),
 					halfSize = 0.5f * size;
+
 			MinPos = new Vector2(screenPos.x - halfSize.x, screenPos.y - halfSize.y);
 			MaxPos = new Vector2(screenPos.x + halfSize.x, screenPos.y + halfSize.y);
 
@@ -136,23 +152,52 @@ public class CellPhone : MonoBehaviour
 		Instance = this;
 
 		CurrentState = null;
-		StartingPosition = MyTransform.position;
+	}
+	void Update()
+	{
+		float y = (IsUp ? SelectedHeight : DeSelectedHeight);
+		if (MyTransform.parent.localScale.x < 0.0f)
+		{
+			MyTransform.localPosition = new Vector3(-Mathf.Abs(MyTransform.localPosition.x),
+													y, MyTransform.localPosition.z);
+		}
+		else
+		{
+			MyTransform.localPosition = new Vector3(Mathf.Abs(MyTransform.localPosition.x),
+													y, MyTransform.localPosition.z);
+		}
 	}
 	void OnGUI()
 	{
-		ButtonPositioningData data = new ButtonPositioningData(MainCamera.Instance);
+		ButtonPositioningData data = new ButtonPositioningData();
 		Vector2 center = (data.MinPos + data.MaxPos) * 0.5f;
 
-		GUI.DrawTexture(new Rect(center.x - (CellPhoneTex.width * 0.5f),
-								 center.y - (CellPhoneTex.height * 0.5f),
-								 CellPhoneTex.width, CellPhoneTex.height),
+		Vector2 cellSize = new Vector2(data.ScreenSizeScale.x * CellPhoneTex.width,
+									   data.ScreenSizeScale.y * CellPhoneTex.height);
+		GUI.DrawTexture(new Rect(center.x - (cellSize.x * 0.5f),
+								 center.y - (cellSize.y * 0.5f),
+								 cellSize.x, cellSize.y),
 						CellPhoneTex, ScaleMode.StretchToFill, true);
 
 		if (CurrentState != null)
 		{
 			CurrentState = CurrentState.OnGUI(data);
 			if (CurrentState == null)
-				MyTransform.position = StartingPosition;
+			{
+				MyTransform.localPosition = new Vector3(MyTransform.localPosition.x,
+														SelectedHeight, MyTransform.localPosition.z);
+			}
+		}
+	}
+	void OnDrawGizmos()
+	{
+		if (MyCollider is BoxCollider2D)
+		{
+			Bounds bnds = MyCollider.bounds;
+			Vector2 boxCenter = (MyCollider as BoxCollider2D).center;
+
+			Gizmos.color = Color.grey;
+			Gizmos.DrawCube(bnds.center - new Vector3(boxCenter.x, boxCenter.y, 0.0f), bnds.size);
 		}
 	}
 
@@ -163,7 +208,8 @@ public class CellPhone : MonoBehaviour
 	{
 		if (!IsUp)
 		{
-			MyTransform.position = new Vector3(VisiblePosition.x, VisiblePosition.y, MyTransform.position.z);
+			MyTransform.localPosition = new Vector3(MyTransform.localPosition.x,
+													SelectedHeight, MyTransform.localPosition.z);
 			CurrentState = new CPState_MainScreen();
 		}
 	}
@@ -177,7 +223,8 @@ public class CellPhone : MonoBehaviour
 		{
 			CurrentState.OnInterrupt();
 			CurrentState = null;
-			MyTransform.position = StartingPosition;
+			MyTransform.localPosition = new Vector3(MyTransform.localPosition.x,
+													SelectedHeight, MyTransform.localPosition.z);
 		}
 	}
 }

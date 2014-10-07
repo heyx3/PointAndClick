@@ -12,7 +12,9 @@ public class CPState_MainScreen : CPState_Base
 	private bool MainScreenButton(Vector2 posLerp, Texture2D tex, CellPhone.ButtonPositioningData data)
 	{
 		return GUIButton(posLerp, Cellphone.MainScreen.ButtonSize, data,
-						 Cellphone.MainScreen.ScreenBorder, Cellphone.ButtonStyle, tex);
+						 new Vector2(Cellphone.MainScreen.ScreenBorder.x * data.ScreenSizeScale.x,
+									 Cellphone.MainScreen.ScreenBorder.y * data.ScreenSizeScale.y),
+						 Cellphone.ButtonStyle, tex);
 	}
 	public override CPState_Base OnGUI(CellPhone.ButtonPositioningData data)
 	{
