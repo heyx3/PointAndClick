@@ -34,6 +34,11 @@ public class PlayerInputController : MonoBehaviour
 	/// </summary>
 	public float MaxDistToTarget = 5.0f;
 
+	/// <summary>
+	/// The difference between the ground height and the player's center.
+	/// </summary>
+	public float GroundHeightOffset = 10.0f;
+
 	public bool IsUsingFlashlight = false;
 
 
@@ -107,13 +112,29 @@ public class PlayerInputController : MonoBehaviour
 		Instance = this;
 	}
 
+	private float CalculateGroundHeight(float x)
+	{
+		if (GroundHeight.Instance == null)
+		{
+			Debug.LogError("No 'GroundHeight' component in the scene!");
+			return MyTransform.position.y;
+		}
+		else return GroundHeightOffset + GroundHeight.Instance.GetHeightAt(x);
+	}
 	private Transform GenerateTargetPosIndicator(float x)
 	{
-		if (targetPosIndicator == null)
-			targetPosIndicator = ((GameObject)Instantiate(TargetPosIndicatorPrefab)).transform;
+		float height = CalculateGroundHeight(x);
 
-		targetPosIndicator.position = new Vector3(x, targetPosIndicator.position.y, targetPosIndicator.position.z);
-		return targetPosIndicator;
+		if (!System.Single.IsNaN(height))
+		{
+			if (targetPosIndicator == null)
+				targetPosIndicator = ((GameObject)Instantiate(TargetPosIndicatorPrefab)).transform;
+
+			targetPosIndicator.position = new Vector3(x, height, targetPosIndicator.position.z);
+			return targetPosIndicator;
+		}
+
+		return null;
 	}
 	void Update()
 	{
@@ -195,15 +216,25 @@ public class PlayerInputController : MonoBehaviour
 			else
 			{
 				MyAnimations.SwitchToWalkAnim(towardsTarget > 0.0f);
-				MyTransform.position += new Vector3(WalkSpeed * Mathf.Sign(towardsTarget) * Time.deltaTime, 0.0f, 0.0f);
+				
+				Vector3 pos = MyTransform.position;
+
+				//Make sure the player can move to the next spot.
+				float newX = pos.x + (WalkSpeed * Mathf.Sign(towardsTarget) * Time.deltaTime);
+				float newY = CalculateGroundHeight(newX);
+				if (System.Single.IsNaN(newY))
+				{
+					MyAnimations.SwitchToIdleAnim(MyAnimations.IsFacingRight);
+					if (targetPosIndicator != null) Destroy(targetPosIndicator.gameObject);
+				}
+				else
+				{
+					MyTransform.position = new Vector3(newX, newY + GroundHeightOffset, pos.z);
+				}
 			}
 		}
 
 		//Update flashlight behavior.
 		FlashlightCone.gameObject.SetActive(IsUsingFlashlight);
-
-		Vector3 pos = MyTransform.position;
-		pos.x = Mathf.RoundToInt (pos.x);
-		MyTransform.position = pos;
 	}
 }
