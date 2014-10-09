@@ -29,7 +29,7 @@ public class ParallaxObject : MonoBehaviour
 		Vector3 newPos = playerTr.position;
 		float deltaX = newPos.x - lastPlayerPos.x;
 
-		myTr.position += new Vector3(deltaX / ForegroundDistanceMultiplier, 0.0f, 0.0f);
+		myTr.position -= new Vector3(deltaX / ForegroundDistanceMultiplier, 0.0f, 0.0f);
 
 		lastPlayerPos = newPos;
 	}
