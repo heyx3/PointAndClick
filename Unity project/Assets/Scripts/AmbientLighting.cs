@@ -25,7 +25,7 @@ public class AmbientLighting : MonoBehaviour
 		Vector3 pos = MyTransform.position;
 		Vector3 playerPos = PlayerInputController.Instance.MyTransform.position;
 
-		MyTransform.position = new Vector3(playerPos.x, pos.y, pos.z);
+		//MyTransform.position = new Vector3(playerPos.x, pos.y, pos.z);
 
 		if (PlayerInputController.Instance.IsUsingFlashlight)
 		{

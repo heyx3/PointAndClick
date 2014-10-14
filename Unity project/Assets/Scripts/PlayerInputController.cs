@@ -203,19 +203,52 @@ public class PlayerInputController : MonoBehaviour
 		//Now update the movement logic.
 		if (targetPosIndicator == null)
 		{
-			MyAnimations.SwitchToIdleAnim(MyAnimations.IsFacingRight);
+			if (IsUsingFlashlight)
+			{
+				MyAnimations.SwitchToIdleLightAnim(MyAnimations.IsFacingRight);
+			}
+			else if (CellPhone.Instance.IsUp)
+			{
+				MyAnimations.SwitchToIdlePhoneAnim(MyAnimations.IsFacingRight);
+			}
+			else
+			{
+				MyAnimations.SwitchToIdleAnim(MyAnimations.IsFacingRight);
+			}
 		}
 		else
 		{
 			float towardsTarget = targetPosIndicator.position.x - MyTransform.position.x;
 			if (Mathf.Abs(towardsTarget) < MaxDistToTarget)
 			{
-				MyAnimations.SwitchToIdleAnim(MyAnimations.IsFacingRight);
 				if (targetPosIndicator != null) Destroy(targetPosIndicator.gameObject);
+				if (IsUsingFlashlight)
+				{
+					MyAnimations.SwitchToIdleLightAnim(MyAnimations.IsFacingRight);
+				}
+				else if (CellPhone.Instance.IsUp)
+				{
+					MyAnimations.SwitchToIdlePhoneAnim(MyAnimations.IsFacingRight);
+				}
+				else
+				{
+					MyAnimations.SwitchToIdleAnim(MyAnimations.IsFacingRight);
+				}
 			}
 			else
 			{
-				MyAnimations.SwitchToWalkAnim(towardsTarget > 0.0f);
+				if (IsUsingFlashlight)
+				{
+					MyAnimations.SwitchToWalkLightAnim(towardsTarget > 0.0f);
+				}
+				else if (CellPhone.Instance.IsUp)
+				{
+					MyAnimations.SwitchToWalkPhoneAnim(towardsTarget > 0.0f);
+				}
+				else 
+				{
+					MyAnimations.SwitchToWalkAnim(towardsTarget > 0.0f);
+				}
 				
 				Vector3 pos = MyTransform.position;
 
@@ -224,7 +257,18 @@ public class PlayerInputController : MonoBehaviour
 				float newY = CalculateGroundHeight(newX);
 				if (System.Single.IsNaN(newY))
 				{
-					MyAnimations.SwitchToIdleAnim(MyAnimations.IsFacingRight);
+					if (IsUsingFlashlight)
+					{
+						MyAnimations.SwitchToIdleLightAnim(MyAnimations.IsFacingRight);
+					}
+					else if (CellPhone.Instance.IsUp)
+					{
+						MyAnimations.SwitchToIdlePhoneAnim(MyAnimations.IsFacingRight);
+					}
+					else
+					{
+						MyAnimations.SwitchToIdleAnim(MyAnimations.IsFacingRight);
+					}
 					if (targetPosIndicator != null) Destroy(targetPosIndicator.gameObject);
 				}
 				else
