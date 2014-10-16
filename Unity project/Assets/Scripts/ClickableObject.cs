@@ -12,7 +12,7 @@ public abstract class ClickableObject : MonoBehaviour
 	/// <summary>
 	/// All currently-clickable objects.
 	/// </summary>
-	public static List<ClickableObject> CurrentObjects { get; set; }
+	public static List<ClickableObject> CurrentObjects = new List<ClickableObject>();
 
 
 	/// <summary>
