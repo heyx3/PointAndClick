@@ -3,6 +3,7 @@ using System.Collections;
 
 public class DialogController : MonoBehaviour
 {
+		public static DialogController Instance { get; private set; }
 
 		public GameObject DialogBox;
 
@@ -17,21 +18,30 @@ public class DialogController : MonoBehaviour
 		public bool mouseClicked = false;
 		private float nextTracker = 0;
 		private string[] dialog;
-		private Rect dialogRect;
+		private Rect playerRect;
+		public Rect objectRect;
 
 		public GUISkin textSkin;
 
 		public Transform MyTransform { get; private set; }
 
 		// Use this for initialization
-		void Start ()
+		void Awake ()
 		{
 				this.enabled = true;
-				SomeDialog ();
+				textTracker = 0;
+				playerRect = new Rect (Screen.width / 4, Screen.height / 4, Screen.width / 2, Screen.height / 4);
+
+				if (Instance != null) {
+						Debug.LogError ("There is more than one DialogController in the scene!");
+						return;
+				}
+		
+				Instance = this;
 		}
 	
 		// Update is called once per frame
-		void Update ()
+		void FixedUpdate ()
 		{
 				if (Input.GetMouseButton (0)) {
 						Next ();
@@ -55,13 +65,12 @@ public class DialogController : MonoBehaviour
 
 		void OnGUI ()
 		{
-				GUI.skin = textSkin;
+		GUI.skin = textSkin;
 		if (playerTalking[textTracker]){
-				GUI.Label (PlayerInputController.Instance.PlayerDialogBox, currentText);
+			GUI.Label (playerRect, currentText);
 		}
-		else GUI.Label (dialogRect, currentText);
-//		GUI.Label(nameRect, charNames[textTracker]);
-		}
+		else GUI.Label (objectRect, currentText);
+	}
 
 		void Next ()
 		{
@@ -84,22 +93,28 @@ public class DialogController : MonoBehaviour
 
 		}
 
-		void SomeDialog ()
+	void StaticMessage (string message)
 		{
-		
-				dialog = new string[2];
-				dialog [0] = "Look at that \"Dead Rat\" over there";
-				dialog [1] = "I wish somebody would tell me some cool RAT FACTS";
-
-				playerTalking = new bool[2];
-				playerTalking [0] = playerTalking [1] = true;
-
-				dialogRect = new Rect (Screen.width / 10, Screen.height * 3 / 4, Screen.width * 8 / 13, Screen.height / 4);
-				donePrinting = false;
+		if (donePrinting && currentText == "")
+		{
+			SetMessage(message);
+		}
+		else if (donePrinting)
+		{
+			currentText = "";
+			SetMessage(message);
+		}
+		else return;
 		}
 
-		void Activate (Vector2 mousePos)
-		{
-				DialogBox.SetActive (true);
-		}
+	void SetMessage(string message){
+		dialog = new string[1];
+		dialog [0] = message;
+		playerTalking = new bool[1];
+		playerTalking [0] = true;
+
+		donePrinting = false;
+		textTracker = 0;
+	}
+	
 }
