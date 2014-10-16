@@ -12,10 +12,6 @@ public class PlayerInputController : MonoBehaviour
 
 
 	/// <summary>
-	/// The container that all clickable objects should be inside.
-	/// </summary>
-	public Transform ClickableObjectsContainer = null;
-	/// <summary>
 	/// The prefab for the indicator when the player tells the character where to move.
 	/// </summary>
 	public GameObject TargetPosIndicatorPrefab = null;
@@ -43,34 +39,6 @@ public class PlayerInputController : MonoBehaviour
 
 	public Rect PlayerDialogBox;
 
-
-	/// <summary>
-	/// Performs a non-trivial series of operations that is directly proportional
-	/// to the number of children in "ClickableObjectsContainer".
-	/// If "ClickableObjectsContainer" is null, an empty collection is returned.
-	/// </summary>
-	public IEnumerable<ClickableObject> ClickableObjects
-	{
-		get
-		{
-			if (ClickableObjectsContainer == null) yield break;
-
-			for (int i = 0; i < ClickableObjectsContainer.childCount; ++i)
-			{
-				ClickableObject clo = ClickableObjectsContainer.GetChild(i).GetComponent<ClickableObject>();
-				if (clo == null)
-				{
-					Debug.LogWarning("Child object '" + clo.gameObject.name + "' of container '" +
-										 ClickableObjectsContainer.gameObject.name +
-										 "' does not have a 'ClickableObject' component");
-				}
-				else
-				{
-					yield return clo;
-				}
-			}
-		}
-	}
 	/// <summary>
 	/// A cached reference to this player's animation controller.
 	/// </summary>
@@ -96,11 +64,6 @@ public class PlayerInputController : MonoBehaviour
 
 		PlayerDialogBox = new Rect (Screen.width / 3, Screen.height * 1 / 4, Screen.width * 4, Screen.height / 2);
 
-		if (ClickableObjectsContainer == null)
-		{
-			Debug.LogWarning("'ClickableObjectsContainer' field in PlayerInputController component of object '" +
-							     gameObject.name + "' is null");
-		}
 		if (TargetPosIndicatorPrefab == null)
 		{
 			Debug.LogError("'TargetPosIndicatorPrefab' field in PlayerInputController component of object '" +
@@ -165,7 +128,7 @@ public class PlayerInputController : MonoBehaviour
 			bool foundClick = false;
 
 			//First see if any objects were clicked on.
-			foreach (ClickableObject co in ClickableObjects)
+			foreach (ClickableObject co in ClickableObject.CurrentObjects)
 			{
 				if (co.MyCollider.OverlapPoint(worldMouse))
 				{

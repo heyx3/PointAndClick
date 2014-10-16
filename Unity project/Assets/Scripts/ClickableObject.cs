@@ -10,6 +10,16 @@ using UnityEngine;
 public abstract class ClickableObject : MonoBehaviour
 {
 	/// <summary>
+	/// All currently-clickable objects.
+	/// </summary>
+	public static List<ClickableObject> CurrentObjects { get; set; }
+
+
+	/// <summary>
+	/// Cached reference to this object's Transform.
+	/// </summary>
+	public Transform MyTransform { get; private set; }
+	/// <summary>
 	/// Cached reference to this object's collider.
 	/// Calculated on Awake().
 	/// </summary>
@@ -19,8 +29,15 @@ public abstract class ClickableObject : MonoBehaviour
 	void Awake()
 	{
 		MyCollider = collider2D;
+		MyTransform = transform;
 
+		CurrentObjects.Add(this);
+		
 		ChildAwake();
+	}
+	void OnDestroy()
+	{
+		CurrentObjects.Remove(this);
 	}
 
 
