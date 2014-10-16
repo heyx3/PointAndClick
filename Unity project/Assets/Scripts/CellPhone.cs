@@ -39,18 +39,38 @@ public class CellPhone : MonoBehaviour
 	[Serializable]
 	public class MessengerScreenData
 	{
-		public Texture2D Background;
-		public float MessageXOffsetLerp = 0.05f;
+		public Texture2D Background, NewSendMessage, NoSendMessage;
+		public float MessageXBorderLerp = 0.01f;
 		public float FirstMessageYLerp = 0.2f,
-					 MessageSeparationLerp = 0.1f,
-					 MessageHeightLerp = 0.08f;
+					 MessageSeparationLerp = 0.1f;
+		public Vector2 MessageBoxTopLeftLerp = new Vector2(0.547945f, 1.0f - 0.798077f),
+					   MessageBoxBottomRightLerp = new Vector2(0.712329f, 1.0f - 0.951923f);
+		public Vector2 MessageButtonCenterLerp = new Vector2(0.863014f, 0.125f);
+		public float WaitTimeBeforeReply = 2.0f,
+					 PlayerTypeInterval = 0.1f;
 
 		[Serializable]
 		public class Message
 		{
 			public Texture2D Image;
-			public string MessageText;
-			public bool FromPlayer;
+			public string MessageText = "";
+			public bool FromPlayer = true;
+
+			/// <summary>
+			/// Types of message, assuming this message is from her.
+			/// </summary>
+			public enum MessageKind
+			{
+				/// <summary>
+				/// The next message should be sent in a few seconds.
+				/// </summary>
+				SendNextImmediately,
+				/// <summary>
+				/// The next message will be sent manually once some story stuff happens.
+				/// </summary>
+				WaitForStory,
+			}
+			public MessageKind MessageType = MessageKind.WaitForStory;
 		}
 		public Message[] Messages = new Message[0];
 	}
@@ -84,8 +104,14 @@ public class CellPhone : MonoBehaviour
 
 	public float DeSelectedHeight = -158.375f,
 				 SelectedHeight = -26.7f;
-	public Vector2 BackgroundSpriteBorderSize;
+	public Vector2 BackgroundSpriteBorderSize,
+				   BackgroundSpriteOffset;
 
+	
+	/// <summary>
+	/// Whether there is a new message for the player to see.
+	/// </summary>
+	public bool IsThereNewMessage { get; private set; }
 
 	/// <summary>
 	/// Cached reference to this object's collider.
@@ -138,6 +164,8 @@ public class CellPhone : MonoBehaviour
 		}
 	}
 
+
+	private Vector2 scrollViewPos = Vector2.zero;
 
 	void Awake()
 	{
@@ -216,15 +244,22 @@ public class CellPhone : MonoBehaviour
 	/// <summary>
 	/// Should be raised when the mouse clicks somewhere that ISN'T this phone
 	/// (PlayerInputController handles clicking inputs).
+	/// Returns whether the phone should actually NOT be clicked off.
 	/// </summary>
-	public void OnClickedOff(Vector2 mousePos)
+	public bool OnClickedOff(Vector2 mousePos)
 	{
 		if (IsUp)
 		{
-			CurrentState.OnInterrupt();
-			CurrentState = null;
-			MyTransform.localPosition = new Vector3(MyTransform.localPosition.x,
-													SelectedHeight, MyTransform.localPosition.z);
+			bool cancel = CurrentState.OnInterrupt();
+			if (!cancel)
+			{
+				CurrentState = null;
+				MyTransform.localPosition = new Vector3(MyTransform.localPosition.x,
+														SelectedHeight, MyTransform.localPosition.z);
+			}
+			return cancel;
 		}
+
+		return false;
 	}
 }
