@@ -14,7 +14,7 @@ public class CPState_Messenger : CPState_Base
 	/// <summary>
 	/// The most recent message that was sent. Set to -1 if no messages have been sent yet.
 	/// </summary>
-	public static int CurrentMessage = 0;
+	public static int CurrentMessage = -1;
 
 	private enum ScreenState
 	{
@@ -22,6 +22,10 @@ public class CPState_Messenger : CPState_Base
 		/// Nothing's going on.
 		/// </summary>
 		Idle,
+		/// <summary>
+		/// Waiting for the player to hit "send".
+		/// </summary>
+		WaitingForSend,
 		/// <summary>
 		/// The player is typing a reply.
 		/// </summary>
@@ -38,12 +42,18 @@ public class CPState_Messenger : CPState_Base
 
 	private float currentReplyWait = -1.0f;
 
-	private Vector2 scrollViewPos = Vector2.zero;
+	private Vector2 scrollViewPos = new Vector2(0.0f, 999999.0f);
 	
 
 
 	public override CPState_Base OnGUI(CellPhone.ButtonPositioningData data)
 	{
+		if (Cellphone.TriggerNewMessage)
+		{
+			Cellphone.TriggerNewMessage = false;
+			NextMessage();
+		}
+
 		//Render messages.
 
 		Vector2 range = data.MaxPos - data.MinPos;
@@ -100,7 +110,7 @@ public class CPState_Messenger : CPState_Base
 		//Render player-typed text.
 		if (CurrentMessage < ScreenDat.Messages.Length - 1 &&
 			ScreenDat.Messages[CurrentMessage + 1].MessageText.Length > 0 &&
-			CurrentState == ScreenState.TypingReply)
+			(CurrentState == ScreenState.TypingReply || CurrentState == ScreenState.WaitingForSend))
 		{
 			Vector2 dims = ScreenDat.MessageBoxBottomRightLerp - ScreenDat.MessageBoxTopLeftLerp;
 			dims.y = -dims.y;
@@ -114,17 +124,14 @@ public class CPState_Messenger : CPState_Base
 
 
 		//Render message button if player needs to type text.
-		if (CurrentState == ScreenState.Idle &&
-			ScreenDat.Messages.Length > CurrentMessage + 1 &&
-			ScreenDat.Messages[CurrentMessage + 1].FromPlayer)
+		if (CurrentState == ScreenState.WaitingForSend)
 		{
 			if (GUIButton(ScreenDat.MessageButtonCenterLerp,
 						  new Vector2(ScreenDat.NewSendMessage.width, ScreenDat.NewSendMessage.height),
 						  data, new Vector2(), Cellphone.ButtonStyle, ScreenDat.NewSendMessage))
 			{
-				typedLetterIndex = 0;
-				nextTypedLetter = ScreenDat.PlayerTypeInterval;
-				CurrentState = ScreenState.TypingReply;
+				NextMessage();
+				CurrentState = ScreenState.Idle;
 			}
 		}
 		else GUITexture(ScreenDat.MessageButtonCenterLerp, data, ScreenDat.NoSendMessage);
@@ -163,7 +170,7 @@ public class CPState_Messenger : CPState_Base
 
 		return this;
 	}
-	private void NextMessage()
+	public void NextMessage()
 	{
 		CurrentMessage += 1;
 		typedLetterIndex = -1;
@@ -177,7 +184,7 @@ public class CPState_Messenger : CPState_Base
 		}
 		else if (ScreenDat.Messages[CurrentMessage + 1].FromPlayer)
 		{
-			CurrentState = ScreenState.Idle;
+			CurrentState = ScreenState.TypingReply;
 		}
 		else switch (ScreenDat.Messages[CurrentMessage].MessageType)
 		{

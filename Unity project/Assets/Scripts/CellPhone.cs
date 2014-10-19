@@ -111,7 +111,7 @@ public class CellPhone : MonoBehaviour
 	/// <summary>
 	/// Whether there is a new message for the player to see.
 	/// </summary>
-	public bool IsThereNewMessage { get; private set; }
+	public bool TriggerNewMessage { get; set; }
 
 	/// <summary>
 	/// Cached reference to this object's collider.
