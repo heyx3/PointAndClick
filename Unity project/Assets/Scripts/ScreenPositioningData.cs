@@ -42,6 +42,25 @@ public class ScreenPositioningData
 		MaxPos.y = Screen.height - MaxPos.y;
 	}
 
+
+	/// <summary>
+	/// Converts the given screen position to an interpolant for this instance's MinPos/MaxPos fields.
+	/// </summary>
+	public Vector2 GetLerpPos(Vector2 screenPos)
+	{
+		return new Vector2(Mathf.InverseLerp(MinPos.x, MaxPos.x, screenPos.x),
+						   Mathf.InverseLerp(MinPos.y, MaxPos.y, screenPos.y));
+	}
+	/// <summary>
+	/// Gets the given X and Y size relative to the
+	/// size of the region bounded by this instance's MinPos/MaxPos.
+	/// </summary>
+	public Vector2 GetLerpSize(Vector2 screenSize)
+	{
+		return new Vector2(Mathf.InverseLerp(0.0f, MaxPos.x - MinPos.x, screenSize.x),
+						   Mathf.InverseLerp(0.0f, MaxPos.y - MinPos.y, screenSize.y));
+	}
+
 	/// <summary>
 	/// Draws a GUI.Button with the given parameters and returns whether it was pressed.
 	/// </summary>
@@ -83,7 +102,7 @@ public class ScreenPositioningData
 						tex);
 	}
 	/// <summary>
-	/// Draws a texture on this phone screen.
+	/// Draws a texture on this phone screen given the position of the texture's center.
 	/// </summary>
 	public void GUITexture(Vector2 centerLerp, Texture2D tex)
 	{
@@ -94,6 +113,17 @@ public class ScreenPositioningData
 		GUI.DrawTexture(new Rect(pos.x - (0.5f * size.x), pos.y - (0.5f * size.y),
 								 size.x, size.y),
 						tex);
+	}
+	/// <summary>
+	/// Draws a texture on this phone screen given the position of the texture's top-left corner.
+	/// </summary>
+	public void GUITexture(float minXLerp, float minYLerp, Texture2D tex)
+	{
+		Vector2 texLerpSize = GetLerpSize(new Vector2(tex.width * ScreenSizeScale.x,
+													  tex.height * ScreenSizeScale.y));
+		Vector2 centerLerp = new Vector2(minXLerp + (0.5f * texLerpSize.x),
+										 minYLerp + (0.5f * texLerpSize.y));
+		GUITexture(centerLerp, tex);
 	}
 	/// <summary>
 	/// Draws a label on this phone screen.
