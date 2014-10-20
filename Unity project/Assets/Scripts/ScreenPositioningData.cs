@@ -7,6 +7,13 @@
 /// </summary>
 public class ScreenPositioningData
 {
+	/// <summary>
+	/// Unity's Mathf.Lerp automatically clamps t to 0-1 for some strange reason.
+	/// </summary>
+	private static float Lerp(float min, float max, float t)
+	{
+		return min + (t * (max - min));
+	}
 	private static RenderTexture GameRendTex { get { return MainCamera.Instance.targetTexture; } }
 
 	public Vector2 MinPos, MaxPos;
@@ -33,5 +40,72 @@ public class ScreenPositioningData
 
 		MinPos.y = Screen.height - MinPos.y;
 		MaxPos.y = Screen.height - MaxPos.y;
+	}
+
+	/// <summary>
+	/// Draws a GUI.Button with the given parameters and returns whether it was pressed.
+	/// </summary>
+	/// <param name="posLerp">Values between 0 and 1 representing where on the screen the button is.</param>
+	public bool GUIButton(Vector2 posLerp, Vector2 buttonSize, Vector2 border,
+							 GUIStyle style, Texture2D tex)
+	{
+		Vector2 buttonPos = new Vector2(Lerp(MinPos.x + border.x,
+											 MaxPos.x - border.x,
+											 posLerp.x),
+										Lerp(MinPos.y + border.y,
+											 MaxPos.y - border.y,
+											 posLerp.y));
+
+		buttonSize.x *= ScreenSizeScale.x;
+		buttonSize.y *= ScreenSizeScale.y;
+
+		Rect guiArea = new Rect(buttonPos.x - (0.5f * buttonSize.x),
+								buttonPos.y - (0.5f * buttonSize.y),
+								buttonSize.x, buttonSize.y);
+
+		GUI.DrawTexture(guiArea, tex);
+		return GUI.Button(guiArea, "", style);
+	}
+	/// <summary>
+	/// Draws a background for this phone screen.
+	/// Can scale in the background to fit inside a border and then
+	/// offset the background by a certain amount.
+	/// </summary>
+	public void GUIBackground(Texture2D tex, Vector2 borderSize, Vector2 offset)
+	{
+		Vector2 border = new Vector2(ScreenSizeScale.x * borderSize.x,
+									 ScreenSizeScale.y * borderSize.y);
+		offset = new Vector2(ScreenSizeScale.x * offset.x, ScreenSizeScale.y * offset.y);
+		GUI.DrawTexture(new Rect(MinPos.x + border.x + offset.x,
+								 MaxPos.y - border.y + offset.y,
+								 MaxPos.x - MinPos.x - (2.0f * border.x),
+								 -MaxPos.y + MinPos.y + (2.0f * border.y)),
+						tex);
+	}
+	/// <summary>
+	/// Draws a texture on this phone screen.
+	/// </summary>
+	public void GUITexture(Vector2 centerLerp, Texture2D tex)
+	{
+		Vector2 pos = new Vector2(Lerp(MinPos.x, MaxPos.x, centerLerp.x),
+								  Lerp(MinPos.y, MaxPos.y, centerLerp.y));
+		Vector2 size = new Vector2(ScreenSizeScale.x * tex.width,
+								   ScreenSizeScale.y * tex.height);
+		GUI.DrawTexture(new Rect(pos.x - (0.5f * size.x), pos.y - (0.5f * size.y),
+								 size.x, size.y),
+						tex);
+	}
+	/// <summary>
+	/// Draws a label on this phone screen.
+	/// </summary>
+	public void GUILabel(Vector2 topLeftLerp, Vector2 size, GUIStyle style, string text)
+	{
+		Vector2 topLeft = new Vector2(Lerp(MinPos.x, MaxPos.x, topLeftLerp.x),
+									  Lerp(MinPos.y, MaxPos.y, topLeftLerp.y));
+
+		GUI.Label(new Rect(topLeft.x, topLeft.y,
+						   size.x * ScreenSizeScale.x,
+						   size.y * ScreenSizeScale.y),
+				  text, style);
 	}
 }

@@ -11,10 +11,10 @@ public class CPState_MainScreen : CPState_Base
 	/// <returns>Whether the button was pressed.</returns>
 	private bool MainScreenButton(Vector2 posLerp, Texture2D tex, ScreenPositioningData data)
 	{
-		return GUIButton(posLerp, Cellphone.MainScreen.ButtonSize, data,
-						 new Vector2(Cellphone.MainScreen.ScreenBorder.x * data.ScreenSizeScale.x,
-									 Cellphone.MainScreen.ScreenBorder.y * data.ScreenSizeScale.y),
-						 Cellphone.ButtonStyle, tex);
+		return data.GUIButton(posLerp, Cellphone.MainScreen.ButtonSize,
+							  new Vector2(Cellphone.MainScreen.ScreenBorder.x * data.ScreenSizeScale.x,
+							 			  Cellphone.MainScreen.ScreenBorder.y * data.ScreenSizeScale.y),
+							  Cellphone.ButtonStyle, tex);
 	}
 	public override CPState_Base OnGUI(ScreenPositioningData data)
 	{

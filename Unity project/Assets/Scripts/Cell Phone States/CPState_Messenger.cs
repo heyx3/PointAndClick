@@ -63,7 +63,8 @@ public class CPState_Messenger : CPState_Base
 		//Render messages.
 
 		Vector2 range = data.MaxPos - data.MinPos;
-		GUIBackground(data, ScreenDat.Background);
+		data.GUIBackground(ScreenDat.Background, Cellphone.BackgroundSpriteBorderSize,
+						   Cellphone.BackgroundSpriteOffset);
 
 		//Figure out spacing stuff for the scrollable view that messages are rendered in.
 		const float extraMsgSpace = 1000.0f;
@@ -95,15 +96,15 @@ public class CPState_Messenger : CPState_Base
 																(texSize.y * data.ScreenSizeScale.y)));
 			if (msg.FromPlayer)
 			{
-				GUITexture(new Vector2(1.0f - ScreenDat.MessageXBorderLerp - (0.5f * texLerpSize.x),
-									   y + (0.5f * texLerpSize.y)),
-						   data, msg.Image);
+				data.GUITexture(new Vector2(1.0f - ScreenDat.MessageXBorderLerp - (0.5f * texLerpSize.x),
+											y + (0.5f * texLerpSize.y)),
+								msg.Image);
 			}
 			else
 			{
-				GUITexture(new Vector2(ScreenDat.MessageXBorderLerp + (0.5f * texLerpSize.x),
-									   y + (0.5f * texLerpSize.y)),
-						   data, msg.Image);
+				data.GUITexture(new Vector2(ScreenDat.MessageXBorderLerp + (0.5f * texLerpSize.x),
+											y + (0.5f * texLerpSize.y)),
+								msg.Image);
 			}
 
 			float heightLerp = Mathf.InverseLerp(0.0f, data.MinPos.y - data.MaxPos.y, (texSize.y * data.ScreenSizeScale.y));
@@ -124,22 +125,22 @@ public class CPState_Messenger : CPState_Base
 			dims.x *= 320.0f;
 			dims.y *= 200.0f;
 
-			GUILabel(ScreenDat.MessageBoxTopLeftLerp, dims, data, Cellphone.SmallTextStyle,
-					 ScreenDat.Messages[CurrentMessage + 1].MessageText.Substring(0, typedLetterIndex));
+			data.GUILabel(ScreenDat.MessageBoxTopLeftLerp, dims, Cellphone.SmallTextStyle,
+						  ScreenDat.Messages[CurrentMessage + 1].MessageText.Substring(0, typedLetterIndex));
 		}
 
 
 		//Render message button if player needs to type text.
 		if (CurrentState == ScreenState.WaitingForSend)
 		{
-			if (GUIButton(ScreenDat.MessageButtonCenterLerp,
-						  new Vector2(ScreenDat.NewSendMessage.width, ScreenDat.NewSendMessage.height),
-						  data, new Vector2(), Cellphone.ButtonStyle, ScreenDat.NewSendMessage))
+			if (data.GUIButton(ScreenDat.MessageButtonCenterLerp,
+							   new Vector2(ScreenDat.NewSendMessage.width, ScreenDat.NewSendMessage.height),
+							   new Vector2(), Cellphone.ButtonStyle, ScreenDat.NewSendMessage))
 			{
 				NextMessage();
 			}
 		}
-		else GUITexture(ScreenDat.MessageButtonCenterLerp, data, ScreenDat.NoSendMessage);
+		else data.GUITexture(ScreenDat.MessageButtonCenterLerp, ScreenDat.NoSendMessage);
 
 
 		//Update screen state.

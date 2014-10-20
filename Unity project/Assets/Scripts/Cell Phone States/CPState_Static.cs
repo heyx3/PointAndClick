@@ -13,7 +13,7 @@ public class CPState_Static : CPState_Base
 
 	public override CPState_Base OnGUI(ScreenPositioningData data)
 	{
-		GUIBackground(data, Tex);
+		data.GUIBackground(Tex, Cellphone.BackgroundSpriteBorderSize, Cellphone.BackgroundSpriteOffset);
 		return this;
 	}
 }
