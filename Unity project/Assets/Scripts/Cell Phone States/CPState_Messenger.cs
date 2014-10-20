@@ -14,7 +14,7 @@ public class CPState_Messenger : CPState_Base
 	/// <summary>
 	/// The most recent message that was sent. Set to -1 if no messages have been sent yet.
 	/// </summary>
-	public static int CurrentMessage = -1;
+	public static int CurrentMessage = 0;
 
 	private enum ScreenState
 	{
@@ -52,7 +52,7 @@ public class CPState_Messenger : CPState_Base
 		NextMessage();
 	}
 
-	public override CPState_Base OnGUI(CellPhone.ButtonPositioningData data)
+	public override CPState_Base OnGUI(ScreenPositioningData data)
 	{
 		if (Cellphone.TriggerNewMessage)
 		{

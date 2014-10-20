@@ -11,7 +11,7 @@ public class CPState_Static : CPState_Base
 
 	public CPState_Static(Texture2D tex) { Tex = tex; }
 
-	public override CPState_Base OnGUI(CellPhone.ButtonPositioningData data)
+	public override CPState_Base OnGUI(ScreenPositioningData data)
 	{
 		GUIBackground(data, Tex);
 		return this;

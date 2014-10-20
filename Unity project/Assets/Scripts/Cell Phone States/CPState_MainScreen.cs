@@ -9,14 +9,14 @@ public class CPState_MainScreen : CPState_Base
 	/// </summary>
 	/// <param name="pos">The position of the button as an interpolant between 0 and 1.</param>
 	/// <returns>Whether the button was pressed.</returns>
-	private bool MainScreenButton(Vector2 posLerp, Texture2D tex, CellPhone.ButtonPositioningData data)
+	private bool MainScreenButton(Vector2 posLerp, Texture2D tex, ScreenPositioningData data)
 	{
 		return GUIButton(posLerp, Cellphone.MainScreen.ButtonSize, data,
 						 new Vector2(Cellphone.MainScreen.ScreenBorder.x * data.ScreenSizeScale.x,
 									 Cellphone.MainScreen.ScreenBorder.y * data.ScreenSizeScale.y),
 						 Cellphone.ButtonStyle, tex);
 	}
-	public override CPState_Base OnGUI(CellPhone.ButtonPositioningData data)
+	public override CPState_Base OnGUI(ScreenPositioningData data)
 	{
 		//The screen buttons are arranged on a 3x4 grid.
 		float[] Xs = { 0.0f, 0.5f, 1.0f },

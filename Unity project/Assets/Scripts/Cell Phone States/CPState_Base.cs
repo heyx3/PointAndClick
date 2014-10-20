@@ -21,7 +21,7 @@ public abstract class CPState_Base
 	/// Called on OnGUI(). Returns the next state to go to
 	/// (or this object itself if state shouldn't change).
 	/// </summary>
-	public abstract CPState_Base OnGUI(CellPhone.ButtonPositioningData data);
+	public abstract CPState_Base OnGUI(ScreenPositioningData data);
 	/// <summary>
 	/// Called if this state is interrupted by closing the cell phone.
 	/// Returns whether the interrupt should be ignored.
@@ -36,7 +36,7 @@ public abstract class CPState_Base
 	/// </summary>
 	/// <param name="posLerp">Values between 0 and 1 representing where on the screen the button is.</param>
 	protected bool GUIButton(Vector2 posLerp, Vector2 buttonSize,
-							 CellPhone.ButtonPositioningData data,
+							 ScreenPositioningData data,
 							 Vector2 border, GUIStyle style, Texture2D tex)
 	{
 		Vector2 buttonPos = new Vector2(Lerp(data.MinPos.x + border.x,
@@ -59,7 +59,7 @@ public abstract class CPState_Base
 	/// <summary>
 	/// Draws a background for this phone screen.
 	/// </summary>
-	protected void GUIBackground(CellPhone.ButtonPositioningData data, Texture2D tex)
+	protected void GUIBackground(ScreenPositioningData data, Texture2D tex)
 	{
 		Vector2 border = new Vector2(data.ScreenSizeScale.x * Cellphone.BackgroundSpriteBorderSize.x,
 									 data.ScreenSizeScale.y * Cellphone.BackgroundSpriteBorderSize.y);
@@ -74,7 +74,7 @@ public abstract class CPState_Base
 	/// <summary>
 	/// Draws a texture on this phone screen.
 	/// </summary>
-	protected void GUITexture(Vector2 centerLerp, CellPhone.ButtonPositioningData data, Texture2D tex)
+	protected void GUITexture(Vector2 centerLerp, ScreenPositioningData data, Texture2D tex)
 	{
 		Vector2 pos = new Vector2(Lerp(data.MinPos.x, data.MaxPos.x, centerLerp.x),
 								  Lerp(data.MinPos.y, data.MaxPos.y, centerLerp.y));
@@ -88,7 +88,7 @@ public abstract class CPState_Base
 	/// Draws a label on this phone screen.
 	/// </summary>
 	protected void GUILabel(Vector2 topLeftLerp, Vector2 size,
-							CellPhone.ButtonPositioningData data,
+							ScreenPositioningData data,
 							GUIStyle style, string text)
 	{
 		Vector2 topLeft = new Vector2(Lerp(data.MinPos.x, data.MaxPos.x, topLeftLerp.x),

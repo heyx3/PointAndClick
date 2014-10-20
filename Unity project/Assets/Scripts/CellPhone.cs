@@ -139,37 +139,6 @@ public class CellPhone : MonoBehaviour
 	public bool IsUp { get { return CurrentState != null; } }
 
 
-	/// <summary>
-	/// Performs a lot of calculations to get the min/max position available
-	/// for the phone in GUI space.
-	/// </summary>
-	public class ButtonPositioningData
-	{
-		public Vector2 MinPos, MaxPos;
-		public Vector2 ScreenSizeScale;
-		public ButtonPositioningData()
-		{
-			ScreenSizeScale = new Vector2((float)Screen.width / (float)GameRendTex.width,
-										  (float)Screen.height / (float)GameRendTex.height);
-			ScreenSizeScale *= ((float)GameRendTex.height * 0.5f) / MainCamera.Instance.orthographicSize;
-
-			Vector3 screenPos = MainCamera.Instance.WorldToScreenPoint(CellPhone.Instance.MyCollider.bounds.center);
-			screenPos.x *= ((float)Screen.width / (float)MainCamera.Instance.targetTexture.width);
-			screenPos.y *= ((float)Screen.height / (float)MainCamera.Instance.targetTexture.height);
-
-			Vector2 size = new Vector2(ScreenSizeScale.x * CellPhone.Instance.CellPhoneTex.width,
-									   ScreenSizeScale.y * CellPhone.Instance.CellPhoneTex.height),
-					halfSize = 0.5f * size;
-
-			MinPos = new Vector2(screenPos.x - halfSize.x, screenPos.y - halfSize.y);
-			MaxPos = new Vector2(screenPos.x + halfSize.x, screenPos.y + halfSize.y);
-
-			MinPos.y = Screen.height - MinPos.y;
-			MaxPos.y = Screen.height - MaxPos.y;
-		}
-	}
-
-
 	private Vector2 scrollViewPos = Vector2.zero;
 
 	void Awake()
@@ -188,21 +157,13 @@ public class CellPhone : MonoBehaviour
 	}
 	void Update()
 	{
-		float y = (IsUp ? SelectedHeight : DeSelectedHeight);
-		if (MyTransform.parent.localScale.x < 0.0f)
-		{
-			MyTransform.localPosition = new Vector3(-Mathf.Abs(MyTransform.localPosition.x),
-													y, MyTransform.localPosition.z);
-		}
-		else
-		{
-			MyTransform.localPosition = new Vector3(Mathf.Abs(MyTransform.localPosition.x),
-													y, MyTransform.localPosition.z);
-		}
+		MyTransform.localPosition = new Vector3(MyTransform.localPosition.x,
+												(IsUp ? SelectedHeight : DeSelectedHeight),
+												MyTransform.localPosition.z);
 	}
 	void OnGUI()
 	{
-		ButtonPositioningData data = new ButtonPositioningData();
+		ScreenPositioningData data = new ScreenPositioningData(MyCollider);
 		Vector2 center = (data.MinPos + data.MaxPos) * 0.5f;
 
 		Vector2 cellSize = new Vector2(data.ScreenSizeScale.x * CellPhoneTex.width,
