@@ -57,20 +57,25 @@ public class CellPhone : MonoBehaviour
 			public bool FromPlayer = true;
 
 			/// <summary>
-			/// Types of message, assuming this message is from her.
+			/// How to transition to the next message after this one.
 			/// </summary>
-			public enum MessageKind
+			public enum NextMessageKinds
 			{
 				/// <summary>
-				/// The next message should be sent in a few seconds.
+				/// The next message will not be sent to/by the player
+				/// until it is manually triggered by some story action.
 				/// </summary>
-				SendNextImmediately,
+				WaitForTrigger,
 				/// <summary>
-				/// The next message will be sent manually once some story stuff happens.
+				/// The next message is ready to be sent/received
+				/// by the player as soon as this one is visible.
 				/// </summary>
-				WaitForStory,
+				Continue,
 			}
-			public MessageKind MessageType = MessageKind.WaitForStory;
+			/// <summary>
+			/// How to transition to the next message after this one.
+			/// </summary>
+			public NextMessageKinds NextMessageType = NextMessageKinds.WaitForTrigger;
 		}
 		public Message[] Messages = new Message[0];
 	}

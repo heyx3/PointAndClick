@@ -19,7 +19,7 @@ public class CPState_Messenger : CPState_Base
 	private enum ScreenState
 	{
 		/// <summary>
-		/// Nothing's going on.
+		/// Nothing's going on (no other messages will be sent until something happens in the game).
 		/// </summary>
 		Idle,
 		/// <summary>
@@ -45,6 +45,12 @@ public class CPState_Messenger : CPState_Base
 	private Vector2 scrollViewPos = new Vector2(0.0f, 999999.0f);
 	
 
+
+	public CPState_Messenger()
+	{
+		CurrentMessage -= 1;
+		NextMessage();
+	}
 
 	public override CPState_Base OnGUI(CellPhone.ButtonPositioningData data)
 	{
@@ -131,7 +137,6 @@ public class CPState_Messenger : CPState_Base
 						  data, new Vector2(), Cellphone.ButtonStyle, ScreenDat.NewSendMessage))
 			{
 				NextMessage();
-				CurrentState = ScreenState.Idle;
 			}
 		}
 		else GUITexture(ScreenDat.MessageButtonCenterLerp, data, ScreenDat.NoSendMessage);
@@ -140,7 +145,9 @@ public class CPState_Messenger : CPState_Base
 		//Update screen state.
 		switch (CurrentState)
 		{
-			case ScreenState.Idle: break;
+			case ScreenState.Idle:
+			case ScreenState.WaitingForSend:
+				break;
 
 			case ScreenState.TypingReply:
 				nextTypedLetter -= Time.deltaTime;
@@ -150,7 +157,7 @@ public class CPState_Messenger : CPState_Base
 					nextTypedLetter += Cellphone.MessengerScreen.PlayerTypeInterval;
 					if (typedLetterIndex >= ScreenDat.Messages[CurrentMessage + 1].MessageText.Length)
 					{
-						NextMessage();
+						CurrentState = ScreenState.WaitingForSend;
 					}
 				}
 				break;
@@ -176,29 +183,48 @@ public class CPState_Messenger : CPState_Base
 		typedLetterIndex = -1;
 		currentReplyWait = -1.0f;
 		nextTypedLetter = -1.0f;
-
-		if (CurrentMessage >= ScreenDat.Messages.Length - 1)
+		
+		//If no messages are visible yet, or the last message is already visible, don't do anything.
+		if (CurrentMessage >= ScreenDat.Messages.Length - 1 || CurrentMessage < 0)
 		{
-			CurrentMessage = ScreenDat.Messages.Length - 1;
 			CurrentState = ScreenState.Idle;
 		}
-		else if (ScreenDat.Messages[CurrentMessage + 1].FromPlayer)
+		//Otherwise, either:
+		//   1) Wait for the next message to be triggered,
+		//   2) Type out the player's next message, or
+		//   3) Wait a second or two and then show her next message.
+		else
 		{
-			CurrentState = ScreenState.TypingReply;
-		}
-		else switch (ScreenDat.Messages[CurrentMessage].MessageType)
-		{
-			case CellPhone.MessengerScreenData.Message.MessageKind.SendNextImmediately:
-				CurrentState = ScreenState.WaitingForReply;
-				currentReplyWait = ScreenDat.WaitTimeBeforeReply;
-				break;
-			case CellPhone.MessengerScreenData.Message.MessageKind.WaitForStory:
-				CurrentState = ScreenState.Idle;
-				break;
-			default:
-				Debug.LogError("Unexpected message type '" +
-							       ScreenDat.Messages[CurrentMessage].MessageType);
-				break;
+			CellPhone.MessengerScreenData.Message thisMsg = ScreenDat.Messages[CurrentMessage],
+												  nextMsg = ScreenDat.Messages[CurrentMessage + 1];
+			switch (thisMsg.NextMessageType)
+			{
+				case CellPhone.MessengerScreenData.Message.NextMessageKinds.Continue:
+
+					//If the next message is the player's, show him typing out the message on the screen.
+					if (nextMsg.FromPlayer)
+					{
+						CurrentState = ScreenState.TypingReply;
+						typedLetterIndex = 0;
+						nextTypedLetter = ScreenDat.PlayerTypeInterval;
+					}
+					//Otherwise, wait a second or two and then send her next message.
+					else
+					{
+						CurrentState = ScreenState.WaitingForReply;
+						currentReplyWait = ScreenDat.WaitTimeBeforeReply;
+					}
+
+					break;
+
+				case CellPhone.MessengerScreenData.Message.NextMessageKinds.WaitForTrigger:
+					CurrentState = ScreenState.Idle;
+					break;
+
+				default:
+					Debug.LogError("Unknown message transition '" + thisMsg.NextMessageType.ToString());
+					break;
+			}
 		}
 	}
 
