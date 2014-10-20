@@ -14,7 +14,7 @@ public class CPState_Messenger : CPState_Base
 	/// <summary>
 	/// The most recent message that was sent. Set to -1 if no messages have been sent yet.
 	/// </summary>
-	public static int CurrentMessage = 0;
+	public static int CurrentMessage = -1;
 
 	private enum ScreenState
 	{
