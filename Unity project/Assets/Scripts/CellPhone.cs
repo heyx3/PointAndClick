@@ -27,7 +27,7 @@ public class CellPhone : MonoBehaviour
 	{
 		public Texture2D CallButtonTex, ContactsButtonTex, InternetButtonTex, MessengerButtonTex,
 						 ChatButtonTex, MapsButtonTex, FilesButtonTex, FlashlightButtonTex,
-						 WeatherButtonTex, DatingButtonTex, CalendarButtonTex, SettingsButtonTex;
+						 WeatherButtonTex, DatingButtonTex, CameraButtonTex, SettingsButtonTex;
 		public Vector2 ScreenBorder = new Vector2(15.43f, -33.93f);
 		public Vector2 ButtonSize;
 	}
@@ -94,6 +94,15 @@ public class CellPhone : MonoBehaviour
 	{
 		public Texture2D Background;
 	}
+	[Serializable]
+	public class CameraScreenData
+	{
+		public Texture2D Background, PhotoButton;
+		public Vector2 PhotoButtonPosLerp;
+
+		public Texture2D DisplayTex;
+		public float DisplayTexYOffsetLerp = 0.5f;
+	}
 
 	#endregion
 
@@ -103,6 +112,7 @@ public class CellPhone : MonoBehaviour
 	public CallsScreenData CallsScreen;
 	public DatingScreenData DatingScreen;
 	public ContactsScreenData ContactsScreen;
+	public CameraScreenData CameraScreen;
 
 	public Texture2D CellPhoneTex;
 	public GUIStyle SmallTextStyle, LargeTextStyle, ButtonStyle;

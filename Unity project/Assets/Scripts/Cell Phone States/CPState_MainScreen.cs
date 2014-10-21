@@ -45,8 +45,8 @@ public class CPState_MainScreen : CPState_Base
 			return new CPState_Static(Cellphone.OfflineScreen.Background);
 		if (MainScreenButton(new Vector2(Xs[0], Ys[3]), Cellphone.MainScreen.DatingButtonTex, data))
 			return new CPState_Static(Cellphone.DatingScreen.Background);
-		if (MainScreenButton(new Vector2(Xs[1], Ys[3]), Cellphone.MainScreen.CalendarButtonTex, data))
-			;
+		if (MainScreenButton(new Vector2(Xs[1], Ys[3]), Cellphone.MainScreen.CameraButtonTex, data))
+			return new CPState_Camera();
 		if (MainScreenButton(new Vector2(Xs[2], Ys[3]), Cellphone.MainScreen.SettingsButtonTex, data))
 			;
 

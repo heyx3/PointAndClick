@@ -7,43 +7,16 @@ using UnityEngine;
 /// Represents the target object that has to be photographed.
 /// </summary>
 [RequireComponent(typeof(Collider2D))]
-public class PhotographableObject : MonoBehaviour
+public abstract class PhotographableObject : MonoBehaviour
 {
 	/// <summary>
 	/// Static reference to the only instance of this component in the scene.
 	/// </summary>
 	public static PhotographableObject Instance { get; private set; }
 
-	/// <summary>
-	/// Removes this component from the current object it's attached to and
-	/// attaches itself to the given new object.
-	/// Clears the "OnPhotoTaken" event.
-	/// </summary>
-	public static void SwitchTo(GameObject newObj)
-	{
-		Destroy(Instance);
-		newObj.AddComponent<PhotographableObject>();
-	}
-	/// <summary>
-	/// Removes this component from the current object it's attached to.
-	/// </summary>
-	public static void Erase()
-	{
-		Destroy(Instance);
-	}
-
 
 	public Collider2D MyCollider { get; private set; }
 	public Transform MyTransform { get; private set; }
-
-	/// <summary>
-	/// The signature for a function that reacts to a photograph being taken of this object.
-	/// </summary>
-	public delegate void ReactionToPhotoTaken();
-	/// <summary>
-	/// Raised when the player's cellphone takes a picture of this object.
-	/// </summary>
-	public event ReactionToPhotoTaken OnPhotoTaken;
 
 	void Awake()
 	{
@@ -57,6 +30,8 @@ public class PhotographableObject : MonoBehaviour
 
 		MyCollider = collider2D;
 		MyTransform = transform;
+
+		OnAwake();
 	}
 
 	/// <summary>
@@ -65,9 +40,9 @@ public class PhotographableObject : MonoBehaviour
 	public bool IsInCamera(Camera cam)
 	{
 		float screenAspect = (float)Screen.width / (float)Screen.height;
-		float cameraHeight = camera.orthographicSize * 2.0f;
+		float cameraHeight = cam.orthographicSize * 2.0f;
 
-		Vector3 center3 = camera.transform.position;
+		Vector3 center3 = cam.transform.position;
 		Vector2 center = new Vector2(center3.x, center3.y),
 				extents = 0.5f * new Vector2(cameraHeight * screenAspect, cameraHeight);
 
@@ -85,4 +60,12 @@ public class PhotographableObject : MonoBehaviour
 
 		return region.Overlaps(myBounds, true);
 	}
+
+
+	//Virtual/abstract functions.
+
+	public virtual bool IsPhotographable() { return true; }
+	public abstract void OnPhotographed();
+	
+	protected virtual void OnAwake() { }
 }

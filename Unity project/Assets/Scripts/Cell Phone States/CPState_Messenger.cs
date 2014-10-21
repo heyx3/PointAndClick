@@ -60,7 +60,7 @@ public class CPState_Messenger : CPState_Base
 			NextMessage();
 		}
 
-		//Render messages.
+		//Render background/messages.
 
 		Vector2 range = data.MaxPos - data.MinPos;
 		data.GUIBackground(ScreenDat.Background, Cellphone.BackgroundSpriteBorderSize,
