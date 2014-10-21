@@ -37,8 +37,6 @@ public class PlayerInputController : MonoBehaviour
 
 	public bool IsUsingFlashlight = false;
 
-	public Rect PlayerDialogBox;
-
 	/// <summary>
 	/// A cached reference to this player's animation controller.
 	/// </summary>
@@ -61,9 +59,7 @@ public class PlayerInputController : MonoBehaviour
 
 		MyAnimations = GetComponent<PlayerAnimationController>();
 		MyTransform = transform;
-
-		PlayerDialogBox = new Rect (Screen.width / 3, Screen.height * 1 / 4, Screen.width * 4, Screen.height / 2);
-
+		
 		if (TargetPosIndicatorPrefab == null)
 		{
 			Debug.LogError("'TargetPosIndicatorPrefab' field in PlayerInputController component of object '" +

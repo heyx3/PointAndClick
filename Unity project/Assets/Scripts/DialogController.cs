@@ -107,12 +107,37 @@ public class DialogController : MonoBehaviour
 		else return;
 		}
 
+	void DynamicMessage (string[] messages)
+	{
+		if (donePrinting && currentText == "")
+		{
+			SetMessages(messages);
+		}
+		else if (donePrinting)
+		{
+			currentText = "";
+			SetMessages(messages);
+		}
+		else return;
+	}
+
 	void SetMessage(string message){
 		dialog = new string[1];
 		dialog [0] = message;
 		playerTalking = new bool[1];
 		playerTalking [0] = true;
 
+		donePrinting = false;
+		textTracker = 0;
+	}
+
+	void SetMessages(string[] messages){
+		dialog = messages;
+		playerTalking = new bool[messages.Length];
+		for (int i = 0; i < playerTalking.Length; i++){
+			playerTalking[i] = true;
+		}
+		
 		donePrinting = false;
 		textTracker = 0;
 	}

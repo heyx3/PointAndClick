@@ -25,6 +25,7 @@ public abstract class ClickableObject : MonoBehaviour
 	/// </summary>
 	public Collider2D MyCollider { get; private set; }
 
+	public bool BeenClicked = false;
 
 	void Awake()
 	{
