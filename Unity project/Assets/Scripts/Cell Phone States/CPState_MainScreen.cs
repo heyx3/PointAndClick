@@ -28,8 +28,16 @@ public class CPState_MainScreen : CPState_Base
 			return new CPState_Static(Cellphone.ContactsScreen.Background);
 		if (MainScreenButton(new Vector2(Xs[2], Ys[0]), Cellphone.MainScreen.InternetButtonTex, data))
 			return new CPState_Static(Cellphone.OfflineScreen.Background);
-		if (MainScreenButton(new Vector2(Xs[0], Ys[1]), Cellphone.MainScreen.MessengerButtonTex, data))
-			return new CPState_Messenger();
+		if (Cellphone.TriggerNewMessage)
+		{
+			if (MainScreenButton(new Vector2(Xs[0], Ys[1]), Cellphone.MainScreen.MessengerButtonTexNotification, data))
+				return new CPState_Messenger();
+		}
+		else
+		{
+			if (MainScreenButton(new Vector2(Xs[0], Ys[1]), Cellphone.MainScreen.MessengerButtonTex, data))
+				return new CPState_Messenger();
+		}
 		if (MainScreenButton(new Vector2(Xs[1], Ys[1]), Cellphone.MainScreen.ChatButtonTex, data))
 			return new CPState_Static(Cellphone.OfflineScreen.Background);
 		if (MainScreenButton(new Vector2(Xs[2], Ys[1]), Cellphone.MainScreen.MapsButtonTex, data))

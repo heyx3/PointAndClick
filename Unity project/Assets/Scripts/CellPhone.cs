@@ -28,6 +28,7 @@ public class CellPhone : MonoBehaviour
 		public Texture2D CallButtonTex, ContactsButtonTex, InternetButtonTex, MessengerButtonTex,
 						 ChatButtonTex, MapsButtonTex, FilesButtonTex, FlashlightButtonTex,
 						 WeatherButtonTex, DatingButtonTex, CameraButtonTex, SettingsButtonTex;
+		public Texture2D MessengerButtonTexNotification;
 		public Vector2 ScreenBorder = new Vector2(15.43f, -33.93f);
 		public Vector2 ButtonSize;
 	}
