@@ -123,26 +123,12 @@ public class PlayerInputController : MonoBehaviour
 
 			bool foundClick = false;
 
-			//First see if any objects were clicked on.
-			foreach (ClickableObject co in ClickableObject.CurrentObjects)
-			{
-				if (co.MyCollider.OverlapPoint(worldMouse))
-				{
-					co.OnClicked(mouse);
-					foundClick = true;
-					break;
-				}
-			}
-
-			//Next see if the cell phone was clicked on.
+			//First see if the cell phone was clicked on.
 			if (CellPhone.Instance != null)
 			{
-				if (foundClick)
+				if (CellPhone.Instance.MyCollider.OverlapPoint(worldMouse))
 				{
-					CellPhone.Instance.OnClickedOff(worldMouse);
-				}
-				else if (CellPhone.Instance.MyCollider.OverlapPoint(worldMouse))
-				{
+					Inventory.Instance.CurrentlySelected = null;
 					CellPhone.Instance.OnClickedOn(worldMouse);
 					IsUsingFlashlight = false;
 					foundClick = true;
@@ -154,10 +140,25 @@ public class PlayerInputController : MonoBehaviour
 				}
 			}
 
+			//Next see if any objects were clicked on.
+			foreach (ClickableObject co in ClickableObject.CurrentObjects)
+			{
+				if (co.MyCollider.OverlapPoint(worldMouse))
+				{
+					Inventory.InventoryObjects? invObj = Inventory.Instance.CurrentlySelected;
+					Inventory.Instance.CurrentlySelected = null;
+					co.OnClicked(mouse, invObj);
+					foundClick = true;
+					break;
+				}
+			}
+
 			//Finally, just interpret the mouse click as a movement input.
 			if (!foundClick)
 			{
-				GenerateTargetPosIndicator(worldMouse.x);
+				if (Inventory.Instance.CurrentlySelected.HasValue)
+					Inventory.Instance.CurrentlySelected = null;
+				else GenerateTargetPosIndicator(worldMouse.x);
 			}
 		}
 		MousePressedLastFrame = mouseThisFrame;

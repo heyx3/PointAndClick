@@ -18,24 +18,47 @@ public class Inventory : MonoBehaviour
 
 	public Transform MyTransform { get; private set; }
 	public Collider2D MyCollider { get; private set; }
-
-
-	/// <summary>
-	/// An object that is in an inventory.
-	/// </summary>
-	[Serializable]
-	public class InventoryObject
+	public Texture CurrentlySelectedTex
 	{
-		public bool DoesPlayerHaveObject = false;
-		public string ObjectName = "";
-		public Texture2D ObjectThumbnail = null;
+		get
+		{
+			if (CurrentlySelected.HasValue)
+			{
+				switch (CurrentlySelected.Value)
+				{
+					case InventoryObjects.Key: return KeyTex;
+					case InventoryObjects.MutilatedRat: return MutilatedRatTex;
+					case InventoryObjects.Necklace: return NecklaceTex;
+					case InventoryObjects.WheelValve: return WheelValveTex;
+					default: Debug.LogError("Unknown inventory object '" + CurrentlySelected.Value.ToString() + "'"); return null;
+				}
+			}
+			return null;
+		}
 	}
-	public InventoryObject[] InventoryItems = new InventoryObject[0];
+
+
+	public enum InventoryObjects
+	{
+		MutilatedRat,
+		Key,
+		Necklace,
+		WheelValve,
+	}
+
+	public Texture2D MutilatedRatTex, KeyTex, NecklaceTex, WheelValveTex;
+	public Dictionary<InventoryObjects, bool> HasObjects = new Dictionary<InventoryObjects, bool>()
+	{
+		{ InventoryObjects.MutilatedRat, false },
+		{ InventoryObjects.Key, false },
+		{ InventoryObjects.Necklace, false },
+		{ InventoryObjects.WheelValve, false },
+	};
+	public InventoryObjects? CurrentlySelected = null;
 
 	public Texture2D SelectedTex, DeSelectedTex;
 	public bool IsSelected = false;
 
-	public Vector2 SpacingBetweenObjectsLerp = new Vector2(0.05f, 0.1f);
 	public Vector2 DisplaySpaceMinLerp = new Vector2(0.1157f, 0.005917f),
 				   DisplaySpaceMaxLerp = new Vector2(0.91735537f, 0.64497f);
 
@@ -66,42 +89,56 @@ public class Inventory : MonoBehaviour
 								 texSize.x, texSize.y),
 						texToUse, ScaleMode.StretchToFill, true);
 
+		Vector2 objTexSizes = data.GetLerpSize(new Vector2(KeyTex.width, KeyTex.height)),
+				halfObjTexSizes = 0.5f * objTexSizes;
+		Vector2 displaySpaceMin = DisplaySpaceMinLerp + halfObjTexSizes,
+				displaySpaceMax = DisplaySpaceMaxLerp - halfObjTexSizes;
+		float displaySpaceMidpointY = (displaySpaceMin.y + displaySpaceMax.y) * 0.5f;
 
-		//Draw the inventory items, filling the inventory area from left to right.
-
-		Vector2 displaySpaceMin = new Vector2(Mathf.Lerp(data.MinPos.x, data.MaxPos.x,
-														 DisplaySpaceMinLerp.x),
-											  Mathf.Lerp(data.MaxPos.y, data.MinPos.y,
-														 DisplaySpaceMinLerp.y)),
-				displaySpaceMax = new Vector2(Mathf.Lerp(data.MinPos.x, data.MaxPos.x,
-														 DisplaySpaceMaxLerp.x),
-											  Mathf.Lerp(data.MaxPos.y, data.MinPos.y,
-														 DisplaySpaceMaxLerp.y)),
-				displaySpaceSize = new Vector2(displaySpaceMax.x - displaySpaceMin.x,
-											   displaySpaceMin.y - displaySpaceMax.y),
-				objectSpacing = new Vector2(SpacingBetweenObjectsLerp.x * displaySpaceSize.x,
-											SpacingBetweenObjectsLerp.y * displaySpaceSize.y);
-		Vector2 counter = DisplaySpaceMinLerp;
-		float nextYMin = DisplaySpaceMinLerp.y;
-
-		for (int i = 0; i < InventoryItems.Length; ++i)
+		if (HasObjects[InventoryObjects.MutilatedRat])
 		{
-			InventoryObject obj = InventoryItems[i];
-			if (obj.DoesPlayerHaveObject)
+			if (data.GUIButton(displaySpaceMin, new Vector2(KeyTex.width, KeyTex.height), new Vector2(),
+							   CellPhone.Instance.ButtonStyle, MutilatedRatTex))
 			{
-				Vector2 texLerpSize = data.GetLerpSize(new Vector2(obj.ObjectThumbnail.width,
-																   obj.ObjectThumbnail.height));
-				data.GUITexture(counter.x, counter.y, obj.ObjectThumbnail);
-
-				counter.x += texLerpSize.x + SpacingBetweenObjectsLerp.x;
-				nextYMin = Mathf.Max(nextYMin, counter.y + texLerpSize.y + SpacingBetweenObjectsLerp.y);
-
-				if (counter.x > DisplaySpaceMaxLerp.x)
-				{
-					counter.x = DisplaySpaceMinLerp.x;
-					counter.y = nextYMin;
-				}
+				CurrentlySelected = InventoryObjects.MutilatedRat;
 			}
+		}
+		if (HasObjects[InventoryObjects.Key])
+		{
+			if (data.GUIButton(new Vector2(displaySpaceMax.x, displaySpaceMin.y),
+							   new Vector2(KeyTex.width, KeyTex.height), new Vector2(),
+							   CellPhone.Instance.ButtonStyle, KeyTex))
+			{
+				CurrentlySelected = InventoryObjects.Key;
+			}
+		}
+		if (HasObjects[InventoryObjects.Necklace])
+		{
+			if (data.GUIButton(new Vector2(displaySpaceMin.x, displaySpaceMidpointY),
+							   new Vector2(KeyTex.width, KeyTex.height), new Vector2(),
+							   CellPhone.Instance.ButtonStyle, NecklaceTex))
+			{
+				CurrentlySelected = InventoryObjects.Necklace;
+			}
+		}
+		if (HasObjects[InventoryObjects.WheelValve])
+		{
+			if (data.GUIButton(new Vector2(displaySpaceMax.x, displaySpaceMidpointY),
+							   new Vector2(KeyTex.width, KeyTex.height), new Vector2(),
+							   CellPhone.Instance.ButtonStyle, WheelValveTex))
+			{
+				CurrentlySelected = InventoryObjects.WheelValve;
+			}
+		}
+
+
+		if (CurrentlySelected.HasValue)
+		{
+			Vector2 mousePos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+			GUI.DrawTexture(new Rect(mousePos.x, mousePos.y,
+									 KeyTex.width * data.ScreenSizeScale.x,
+									 KeyTex.height * data.ScreenSizeScale.y),
+							CurrentlySelectedTex);
 		}
 	}
 	void OnDrawGizmos()
