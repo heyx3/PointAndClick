@@ -8,7 +8,6 @@ public class StoryHandler : MonoBehaviour {
 	public ClickableObject[] ObjectList;
 	public int storyProgression;
 	public GameObject BlackDoctor;
-	public StaticTextClickableObject MilePost;
 
 	// Use this for initialization
 	void Start () { 
@@ -35,8 +34,7 @@ public class StoryHandler : MonoBehaviour {
 			}
 			break;
 		case 1:
-			if (CPState_Messenger.CurrentMessage > 4 && MilePost.BeenClicked){
-				CellPhone.Instance.TriggerNewMessage = true;
+			if (CPState_Messenger.CurrentMessage > 5){
 				storyProgression++;
 				ProgressStory();
 			}
@@ -53,8 +51,6 @@ public class StoryHandler : MonoBehaviour {
 
 		case 1:
 			CellPhone.Instance.TriggerNewMessage = true;
-			MilePost.BeenClicked = false;
-			MilePost.message = "<Photo Taken>";
 			break;
 		case 2:
 			BlackDoctor.SetActive(true);

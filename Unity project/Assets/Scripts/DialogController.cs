@@ -5,8 +5,6 @@ public class DialogController : MonoBehaviour
 {
 		public static DialogController Instance { get; private set; }
 
-		public GameObject DialogBox;
-
 		private bool[] playerTalking;
 		public string currentText;
 		private int textTracker;
@@ -19,7 +17,8 @@ public class DialogController : MonoBehaviour
 		private float nextTracker = 0;
 		private string[] dialog;
 		private Rect playerRect;
-		public Rect objectRect;
+		public float objectOffset;
+		
 
 		public GUISkin textSkin;
 
@@ -36,9 +35,11 @@ public class DialogController : MonoBehaviour
 						Debug.LogError ("There is more than one DialogController in the scene!");
 						return;
 				}
-		
 				Instance = this;
 		}
+	// Goal x = 340.78
+	//Object x val = 263.73
+	// Screen x val = 552;
 	
 		// Update is called once per frame
 		void FixedUpdate ()
@@ -69,7 +70,13 @@ public class DialogController : MonoBehaviour
 		if (playerTalking[textTracker]){
 			GUI.Label (playerRect, currentText);
 		}
-		else GUI.Label (objectRect, currentText);
+		else GUI.Label(
+			new Rect (
+				objectOffset - (float)(PlayerInputController.Instance.MyTransform.position.x * 1.65), 
+		        Screen.height * 1 / 4 - transform.position.y, 
+		        Screen.width / 4, 
+		        Screen.height / 4)
+			, currentText);
 	}
 
 		void Next ()
@@ -133,13 +140,13 @@ public class DialogController : MonoBehaviour
 
 	void SetMessages(string[] messages){
 		dialog = messages;
-		playerTalking = new bool[messages.Length];
-		for (int i = 0; i < playerTalking.Length; i++){
-			playerTalking[i] = true;
-		}
 		
 		donePrinting = false;
 		textTracker = 0;
+	}
+
+	void SetDialogOrder(bool[] order){
+		playerTalking = order;
 	}
 	
 }

@@ -1,13 +1,20 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlayerAnimationController.cs">
     <Files>
+      <File FileName="Assets\Scripts\DynamicTextClickableObject.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\DialogController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\StaticTextClickableObject.cs" Line="28" Column="3" />
+      <File FileName="Assets\Scripts\ClickableObject.cs" Line="47" Column="2" />
+      <File FileName="Assets\Scripts\StoryHandler.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\CellPhone.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerAnimationController.cs" Line="155" Column="30" />
-      <File FileName="Assets\Scripts\MainCamera.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\FinalCamera.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerInputController.cs" Line="133" Column="6" />
+      <File FileName="Assets\Scripts\Photographable Objects\PhotographableSign.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Photographable Objects\PhotographableObject.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Cell Phone States\CPState_Messenger.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Cell Phone States\CPState_MainScreen.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\AmbientLighting.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\InventoryClickableObject.cs" Line="7" Column="3" />
+      <File FileName="Assets\Scripts\PlayerAnimationController.cs" Line="24" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
