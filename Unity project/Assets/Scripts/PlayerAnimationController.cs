@@ -7,7 +7,7 @@ using System.Collections;
 /// </summary>
 public class PlayerAnimationController : MonoBehaviour
 {
-	public GameObject IdleAnim, WalkAnim, IdleLightAnim, IdlePhoneAnim, WalkLightAnim, WalkPhoneAnim;
+	public GameObject IdleAnim, WalkAnim, IdleLightAnim, IdlePhoneAnim, WalkLightAnim, WalkPhoneAnim, AlertAnim, AlertButtonAnim;
 	[System.NonSerialized]public GameObject CurrentlyActiveAnim = null;
 
 
@@ -122,6 +122,26 @@ public class PlayerAnimationController : MonoBehaviour
 		CurrentlyActiveAnim = WalkPhoneAnim;
 	}
 
+	public void SetAlertOff(){
+		AlertAnim.SetActive(false);
+		AlertButtonAnim.SetActive(false);
+	}
+
+	public void SetAlertOn(){
+		AlertButtonAnim.SetActive(false);
+		AlertAnim.SetActive(true);
+	}
+
+	public void SetAlertButtonOn(){
+		if (AlertButtonAnim.activeSelf)
+			return;
+		else {
+		AlertAnim.SetActive(false);
+		AlertButtonAnim.SetActive(true);
+		AlertButtonAnim.GetComponent<Animator>().Play("AlertButton");
+		}
+	}
+
 
 	void Awake()
 	{
@@ -155,11 +175,23 @@ public class PlayerAnimationController : MonoBehaviour
 			Debug.LogError("'WalkPhoneAnim' in PlayerAnimationController has not been assigned!");
 			return;
 		}
+		if (AlertAnim == null)
+		{
+			Debug.LogError("'AlertAnim' in PlayerAnimationController has not been assigned!");
+			return;
+		}
+		if (AlertButtonAnim == null)
+		{
+			Debug.LogError("'AlertButtonAnim' in PlayerAnimationController has not been assigned!");
+			return;
+		}
 
 		IdleAnim.GetComponent<Animator>().speed = .5f;
 		IdleLightAnim.GetComponent<Animator>().speed = .5f;
 		IdlePhoneAnim.GetComponent<Animator>().speed = .5f;
 
 		SwitchToIdleAnim(IsFacingRight);
+		AlertAnim.SetActive(false);
+		AlertButtonAnim.SetActive(false);
 	}
 }

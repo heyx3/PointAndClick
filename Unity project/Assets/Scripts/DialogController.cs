@@ -17,6 +17,7 @@ public class DialogController : MonoBehaviour
 		private float nextTracker = 0;
 		private string[] dialog;
 		private Rect playerRect;
+		public Rect objectRect;
 		public float objectOffset;
 		
 
@@ -70,13 +71,7 @@ public class DialogController : MonoBehaviour
 		if (playerTalking[textTracker]){
 			GUI.Label (playerRect, currentText);
 		}
-		else GUI.Label(
-			new Rect (
-				objectOffset - (float)(PlayerInputController.Instance.MyTransform.position.x * 1.65), 
-		        Screen.height * 1 / 4 - transform.position.y, 
-		        Screen.width / 4, 
-		        Screen.height / 4)
-			, currentText);
+		else GUI.Label(objectRect, currentText);
 	}
 
 		void Next ()

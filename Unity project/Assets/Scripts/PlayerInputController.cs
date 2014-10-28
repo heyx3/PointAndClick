@@ -10,6 +10,8 @@ public class PlayerInputController : MonoBehaviour
 {
 	public static PlayerInputController Instance { get; private set; }
 
+	public int AlertDistance;
+	public int AlertButtonDistance;
 
 	/// <summary>
 	/// The prefab for the indicator when the player tells the character where to move.
@@ -240,6 +242,29 @@ public class PlayerInputController : MonoBehaviour
 					MyTransform.position = new Vector3(newX, newY + GroundHeightOffset, pos.z);
 				}
 			}
+		}
+		ClickableObject[] objectList = GameObject.FindObjectsOfType(typeof(ClickableObject)) as ClickableObject[];
+		bool buttonOn = false;
+		foreach (ClickableObject co in objectList){
+			float dist = Vector3.Distance(co.MyTransform.position, this.MyTransform.position);
+			if (dist < AlertButtonDistance){
+				MyAnimations.SetAlertButtonOn();
+				buttonOn = true;
+				break;
+			}
+		}
+		if (!buttonOn){
+			foreach (ClickableObject co in objectList){
+				float dist = Vector3.Distance(co.MyTransform.position, this.MyTransform.position);
+				if (dist < AlertDistance){
+					MyAnimations.SetAlertOn();
+					buttonOn = true;
+					break;
+				}
+			}
+		}
+		if (!buttonOn){
+			MyAnimations.SetAlertOff();
 		}
 
 		//Update flashlight behavior.
