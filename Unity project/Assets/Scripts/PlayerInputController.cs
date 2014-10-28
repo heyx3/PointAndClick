@@ -128,7 +128,7 @@ public class PlayerInputController : MonoBehaviour
 			{
 				if (CellPhone.Instance.MyCollider.OverlapPoint(worldMouse))
 				{
-					Inventory.Instance.CurrentlySelected = null;
+					//Inventory.Instance.CurrentlySelected = null;
 					CellPhone.Instance.OnClickedOn(worldMouse);
 					IsUsingFlashlight = false;
 					foundClick = true;
@@ -145,9 +145,9 @@ public class PlayerInputController : MonoBehaviour
 			{
 				if (co.MyCollider.OverlapPoint(worldMouse))
 				{
-					Inventory.InventoryObjects? invObj = Inventory.Instance.CurrentlySelected;
-					Inventory.Instance.CurrentlySelected = null;
-					co.OnClicked(mouse, invObj);
+					//Inventory.InventoryObjects? invObj = Inventory.Instance.CurrentlySelected;
+					//Inventory.Instance.CurrentlySelected = null;
+					co.OnClicked(mouse, null);
 					foundClick = true;
 					break;
 				}
@@ -156,9 +156,9 @@ public class PlayerInputController : MonoBehaviour
 			//Finally, just interpret the mouse click as a movement input.
 			if (!foundClick)
 			{
-				if (Inventory.Instance.CurrentlySelected.HasValue)
-					Inventory.Instance.CurrentlySelected = null;
-				else GenerateTargetPosIndicator(worldMouse.x);
+				//if (Inventory.Instance.CurrentlySelected.HasValue)
+					//Inventory.Instance.CurrentlySelected = null;
+				/*else*/ GenerateTargetPosIndicator(worldMouse.x);
 			}
 		}
 		MousePressedLastFrame = mouseThisFrame;
