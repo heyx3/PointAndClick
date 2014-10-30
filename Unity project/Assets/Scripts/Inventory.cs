@@ -95,62 +95,56 @@ public class Inventory : MonoBehaviour
 				displaySpaceMax = DisplaySpaceMaxLerp - halfObjTexSizes;
 		float displaySpaceMidpointY = (displaySpaceMin.y + displaySpaceMax.y) * 0.5f;
 
-		if (HasObjects[InventoryObjects.MutilatedRat])
+		if (IsSelected)
 		{
-			if (data.GUIButton(displaySpaceMin, new Vector2(KeyTex.width, KeyTex.height), new Vector2(),
-							   CellPhone.Instance.ButtonStyle, MutilatedRatTex))
+			if (HasObjects[InventoryObjects.MutilatedRat])
 			{
-				CurrentlySelected = InventoryObjects.MutilatedRat;
+				if (data.GUIButton(displaySpaceMin, new Vector2(KeyTex.width, KeyTex.height), new Vector2(),
+								   CellPhone.Instance.ButtonStyle, MutilatedRatTex))
+				{
+					CurrentlySelected = InventoryObjects.MutilatedRat;
+				}
 			}
-		}
-		if (HasObjects[InventoryObjects.Key])
-		{
-			if (data.GUIButton(new Vector2(displaySpaceMax.x, displaySpaceMin.y),
-							   new Vector2(KeyTex.width, KeyTex.height), new Vector2(),
-							   CellPhone.Instance.ButtonStyle, KeyTex))
+			if (HasObjects[InventoryObjects.Key])
 			{
-				CurrentlySelected = InventoryObjects.Key;
+				if (data.GUIButton(new Vector2(displaySpaceMax.x, displaySpaceMin.y),
+								   new Vector2(KeyTex.width, KeyTex.height), new Vector2(),
+								   CellPhone.Instance.ButtonStyle, KeyTex))
+				{
+					CurrentlySelected = InventoryObjects.Key;
+				}
 			}
-		}
-		if (HasObjects[InventoryObjects.Necklace])
-		{
-			if (data.GUIButton(new Vector2(displaySpaceMin.x, displaySpaceMidpointY),
-							   new Vector2(KeyTex.width, KeyTex.height), new Vector2(),
-							   CellPhone.Instance.ButtonStyle, NecklaceTex))
+			if (HasObjects[InventoryObjects.Necklace])
 			{
-				CurrentlySelected = InventoryObjects.Necklace;
+				if (data.GUIButton(new Vector2(displaySpaceMin.x, displaySpaceMidpointY),
+								   new Vector2(KeyTex.width, KeyTex.height), new Vector2(),
+								   CellPhone.Instance.ButtonStyle, NecklaceTex))
+				{
+					CurrentlySelected = InventoryObjects.Necklace;
+				}
 			}
-		}
-		if (HasObjects[InventoryObjects.WheelValve])
-		{
-			if (data.GUIButton(new Vector2(displaySpaceMax.x, displaySpaceMidpointY),
-							   new Vector2(KeyTex.width, KeyTex.height), new Vector2(),
-							   CellPhone.Instance.ButtonStyle, WheelValveTex))
+			if (HasObjects[InventoryObjects.WheelValve])
 			{
-				CurrentlySelected = InventoryObjects.WheelValve;
+				if (data.GUIButton(new Vector2(displaySpaceMax.x, displaySpaceMidpointY),
+								   new Vector2(KeyTex.width, KeyTex.height), new Vector2(),
+								   CellPhone.Instance.ButtonStyle, WheelValveTex))
+				{
+					CurrentlySelected = InventoryObjects.WheelValve;
+				}
 			}
 		}
 
 
 		if (CurrentlySelected.HasValue)
 		{
-			Vector2 mousePos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-			GUI.DrawTexture(new Rect(mousePos.x, mousePos.y,
+			Vector2 mousePos = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y),
+					mTexSize = 0.5f * new Vector2(KeyTex.width * data.ScreenSizeScale.x,
+						  			 		      KeyTex.height * data.ScreenSizeScale.y);
+			GUI.DrawTexture(new Rect(mousePos.x - mTexSize.x,
+									 mousePos.y - mTexSize.y,
 									 KeyTex.width * data.ScreenSizeScale.x,
 									 KeyTex.height * data.ScreenSizeScale.y),
 							CurrentlySelectedTex);
-		}
-	}
-	void OnDrawGizmos()
-	{
-		Collider2D colldr = collider2D;
-		if (colldr is BoxCollider2D)
-		{
-			Bounds bnds = colldr.bounds;
-			Vector2 boxCenter = (colldr as BoxCollider2D).center;
-
-			Gizmos.color = Color.green;
-			Gizmos.DrawCube(bnds.center - new Vector3(boxCenter.x, boxCenter.y, 0.0f), bnds.size);
 		}
 	}
 
