@@ -36,6 +36,10 @@ public class PlayerInputController : MonoBehaviour
 	/// The difference between the ground height and the player's center.
 	/// </summary>
 	public float GroundHeightOffset = 10.0f;
+	/// <summary>
+	/// The difference between the ground height and the target indicator's center.
+	/// </summary>
+	public float TargetGroundHeightOffset = 34.0f;
 
 	public bool IsUsingFlashlight = false;
 
@@ -95,7 +99,7 @@ public class PlayerInputController : MonoBehaviour
 			if (targetPosIndicator == null)
 				targetPosIndicator = ((GameObject)Instantiate(TargetPosIndicatorPrefab)).transform;
 
-			targetPosIndicator.position = new Vector3(x, height, targetPosIndicator.position.z);
+			targetPosIndicator.position = new Vector3(x, height + TargetGroundHeightOffset, targetPosIndicator.position.z);
 			return targetPosIndicator;
 		}
 
