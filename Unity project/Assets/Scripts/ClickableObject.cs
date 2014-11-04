@@ -41,7 +41,9 @@ public abstract class ClickableObject : MonoBehaviour
 		CurrentObjects.Remove(this);
 	}
 
-
-	public abstract void OnClicked(Vector2 mouse, Inventory.InventoryObjects? currentlySelected);
+	
 	protected virtual void ChildAwake() { }
+
+	public virtual void OnMousedOver(Vector2 mouse) { }
+	public abstract void OnClicked(Vector2 mouse, Inventory.InventoryObjects? currentlySelected);
 }
