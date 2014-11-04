@@ -104,25 +104,27 @@ public class PlayerInputController : MonoBehaviour
 	void Update()
 	{
 		//First update mouse input.
+		
+		RenderTexture gameRend = MainCamera.Instance.targetTexture;
+
+		Vector2 mouse = new Vector2(Input.mousePosition.x, Input.mousePosition.y),
+				mouseLerp = new Vector2(mouse.x / (float)Screen.width, mouse.y / (float)Screen.height),
+				cameraViewSize = new Vector2(2.0f * MainCamera.Instance.orthographicSize *
+												(float)gameRend.width / gameRend.height,
+											 2.0f * MainCamera.Instance.orthographicSize),
+				camPos = new Vector2(MainCamera.Instance.transform.position.x,
+									 MainCamera.Instance.transform.position.y),
+				worldMouse = new Vector2(Mathf.Lerp(camPos.x - (cameraViewSize.x * 0.5f),
+													camPos.x + (cameraViewSize.x * 0.5f),
+													mouseLerp.x),
+										 Mathf.Lerp(camPos.y - (cameraViewSize.y * 0.5f),
+													camPos.y + (cameraViewSize.y * 0.5f),
+													mouseLerp.y));
+
 		bool mouseThisFrame = Input.GetMouseButton(0);
+		bool clicked = mouseThisFrame && !MousePressedLastFrame;
 		if (mouseThisFrame && !MousePressedLastFrame)
 		{
-			RenderTexture gameRend = MainCamera.Instance.targetTexture;
-
-			Vector2 mouse = new Vector2(Input.mousePosition.x, Input.mousePosition.y),
-					mouseLerp = new Vector2(mouse.x / (float)Screen.width, mouse.y / (float)Screen.height),
-					cameraViewSize = new Vector2(2.0f * MainCamera.Instance.orthographicSize *
-													(float)gameRend.width / gameRend.height,
-												 2.0f * MainCamera.Instance.orthographicSize),
-					camPos = new Vector2(MainCamera.Instance.transform.position.x,
-										 MainCamera.Instance.transform.position.y),
-					worldMouse = new Vector2(Mathf.Lerp(camPos.x - (cameraViewSize.x * 0.5f),
-														camPos.x + (cameraViewSize.x * 0.5f),
-														mouseLerp.x),
-											 Mathf.Lerp(camPos.y - (cameraViewSize.y * 0.5f),
-														camPos.y + (cameraViewSize.y * 0.5f),
-														mouseLerp.y));
-
 			bool foundClick = false;
 
 			//First see if the cell phone was clicked on.
@@ -164,7 +166,7 @@ public class PlayerInputController : MonoBehaviour
 				{
 					Inventory.InventoryObjects? invObj = Inventory.Instance.CurrentlySelected;
 					Inventory.Instance.CurrentlySelected = null;
-					co.OnClicked(mouse, null);
+					co.OnClicked(mouse, invObj);
 					foundClick = true;
 					break;
 				}
@@ -176,6 +178,19 @@ public class PlayerInputController : MonoBehaviour
 				if (Inventory.Instance.CurrentlySelected.HasValue)
 					Inventory.Instance.CurrentlySelected = null;
 				else GenerateTargetPosIndicator(worldMouse.x);
+			}
+		
+		}
+		else
+		{
+			//See if any objects were moused over.
+			foreach (ClickableObject co in ClickableObject.CurrentObjects)
+			{
+				if (co.MyCollider.OverlapPoint(worldMouse))
+				{
+					co.OnMousedOver(mouse);
+					break;
+				}
 			}
 		}
 		MousePressedLastFrame = mouseThisFrame;
