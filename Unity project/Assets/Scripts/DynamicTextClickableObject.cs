@@ -3,13 +3,8 @@ using UnityEngine;
 
 public class DynamicTextClickableObject : ClickableObject
 {
-	[Serializable]
-	public class DynamicDialog {
-		public string message;
-		public bool isDynamic;
-	}
-
 	public DynamicDialog[] messages;
+	public bool dynamicFlag = false;
 
 	public override void OnClicked(Vector2 mouse, Inventory.InventoryObjects? currentlySelected)
 	{
@@ -29,8 +24,8 @@ public class DynamicTextClickableObject : ClickableObject
 		}
 		else
 		{
-			DialogController.Instance.SendMessage("DynamicMessage", messages);
-			DialogController.Instance.mostRecentlyClicked = this.name;
+			DialogController.Instance.DynamicMessage(messages);
+			DialogController.Instance.dynamicText = dynamicFlag;
 		}
 	}
 }

@@ -40,6 +40,9 @@ public class StoryHandler : MonoBehaviour {
 			}
 			break;
 		case 2:
+			if (Inventory.Instance.HasObjects[Inventory.InventoryObjects.MutilatedRat]){
+				BlackDoctor.GetComponent<DynamicTextClickableObject>().dynamicFlag = true;
+			}
 			break;
 		}
 	}

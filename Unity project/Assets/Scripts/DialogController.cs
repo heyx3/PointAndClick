@@ -5,11 +5,6 @@ public class DialogController : MonoBehaviour
 {
 		public static DialogController Instance { get; private set; }
 
-		public class DynamicDialog {
-			public string message;
-			public bool isDynamic;
-		}
-
 		private bool[] playerTalking;
 		public string currentText;
 		private int textTracker;
@@ -24,7 +19,7 @@ public class DialogController : MonoBehaviour
 		private Rect playerRect;
 		public Rect objectRect;
 		public float objectOffset;
-		public string mostRecentlyClicked;
+		public bool dynamicText;
 		
 
 		public GUISkin textSkin;
@@ -115,7 +110,7 @@ public class DialogController : MonoBehaviour
 		else return;
 		}
 
-	void DynamicMessage (DynamicDialog[] messages)
+	public void DynamicMessage (DynamicDialog[] messages)
 	{
 		string [] updatedMessages = BranchDialog(messages);
 		if (donePrinting && currentText == "")
@@ -152,10 +147,27 @@ public class DialogController : MonoBehaviour
 	}
 
 	string[] BranchDialog(DynamicDialog[] messages){
-		string[] returnArray = new string[messages.Length]; 
+		int length = 0;
 		for (int i = 0; i < messages.Length; i++){
-			returnArray[i] = messages[i].message;
+			if (dynamicText){
+				length++;
+				}
+			else if (!messages[i].isDynamic){
+				length++;
+			}
 		}
+
+		string[] returnArray = new string[length];
+
+		for (int i = 0; i < messages.Length; i++){
+			if (dynamicText){
+				returnArray[i] = messages[i].message;
+			}
+			else if (!messages[i].isDynamic){
+				returnArray[i] = messages[i].message;
+			}
+		}
+		dynamicText = false;
 		return returnArray;
 	}
 	
