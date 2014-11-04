@@ -1,11 +1,16 @@
 ﻿using System;
 using UnityEngine;
 
-
 public class DynamicTextClickableObject : ClickableObject
 {
-	public string[] messages;
-	
+	[Serializable]
+	public class DynamicDialog {
+		public string message;
+		public bool isDynamic;
+	}
+
+	public DynamicDialog[] messages;
+
 	public override void OnClicked(Vector2 mouse, Inventory.InventoryObjects? currentlySelected)
 	{
 		BeenClicked = true;

@@ -24,7 +24,7 @@ public class ParallaxObject : MonoBehaviour
 		lastCameraPos = cameraTr.position;
 		myTr = transform;
 	}
-	void FixedUpdate()
+	void LateUpdate()
 	{
 		Vector3 newPos = cameraTr.position;
 		float deltaX = newPos.x - lastCameraPos.x;

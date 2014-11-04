@@ -5,6 +5,11 @@ public class DialogController : MonoBehaviour
 {
 		public static DialogController Instance { get; private set; }
 
+		public class DynamicDialog {
+			public string message;
+			public bool isDynamic;
+		}
+
 		private bool[] playerTalking;
 		public string currentText;
 		private int textTracker;
@@ -110,17 +115,17 @@ public class DialogController : MonoBehaviour
 		else return;
 		}
 
-	void DynamicMessage (string[] messages)
+	void DynamicMessage (DynamicDialog[] messages)
 	{
 		string [] updatedMessages = BranchDialog(messages);
 		if (donePrinting && currentText == "")
 		{
-			SetMessages(messages);
+			SetMessages(updatedMessages);
 		}
 		else if (donePrinting)
 		{
 			currentText = "";
-			SetMessages(messages);
+			SetMessages(updatedMessages);
 		}
 		else return;
 	}
@@ -146,8 +151,12 @@ public class DialogController : MonoBehaviour
 		playerTalking = order;
 	}
 
-	string[] BranchDialog(string[] messages){
-		return messages;
+	string[] BranchDialog(DynamicDialog[] messages){
+		string[] returnArray = new string[messages.Length]; 
+		for (int i = 0; i < messages.Length; i++){
+			returnArray[i] = messages[i].message;
+		}
+		return returnArray;
 	}
 	
 }
