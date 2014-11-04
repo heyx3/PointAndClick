@@ -19,6 +19,7 @@ public class DialogController : MonoBehaviour
 		private Rect playerRect;
 		public Rect objectRect;
 		public float objectOffset;
+		public string mostRecentlyClicked;
 		
 
 		public GUISkin textSkin;
@@ -68,10 +69,10 @@ public class DialogController : MonoBehaviour
 		void OnGUI ()
 		{
 		GUI.skin = textSkin;
-		if (playerTalking[textTracker]){
+//		if (playerTalking[textTracker]){
 			GUI.Label (playerRect, currentText);
-		}
-		else GUI.Label(objectRect, currentText);
+//		}
+//		else GUI.Label(objectRect, currentText);
 	}
 
 		void Next ()
@@ -111,6 +112,7 @@ public class DialogController : MonoBehaviour
 
 	void DynamicMessage (string[] messages)
 	{
+		string [] updatedMessages = BranchDialog(messages);
 		if (donePrinting && currentText == "")
 		{
 			SetMessages(messages);
@@ -142,6 +144,10 @@ public class DialogController : MonoBehaviour
 
 	void SetDialogOrder(bool[] order){
 		playerTalking = order;
+	}
+
+	string[] BranchDialog(string[] messages){
+		return messages;
 	}
 	
 }

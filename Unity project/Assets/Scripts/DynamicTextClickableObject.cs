@@ -25,6 +25,7 @@ public class DynamicTextClickableObject : ClickableObject
 		else
 		{
 			DialogController.Instance.SendMessage("DynamicMessage", messages);
+			DialogController.Instance.mostRecentlyClicked = this.name;
 		}
 	}
 }
