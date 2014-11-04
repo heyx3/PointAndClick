@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// Handles behavior for the player's inventory.
 /// </summary>
-[RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(BoxCollider2D))]
 public class Inventory : MonoBehaviour
 {
 	public static Inventory Instance { get; private set; }
@@ -17,7 +17,7 @@ public class Inventory : MonoBehaviour
 
 
 	public Transform MyTransform { get; private set; }
-	public Collider2D MyCollider { get; private set; }
+	public BoxCollider2D MyCollider { get; private set; }
 	public Texture CurrentlySelectedTex
 	{
 		get
@@ -62,6 +62,20 @@ public class Inventory : MonoBehaviour
 	public Vector2 DisplaySpaceMinLerp = new Vector2(0.1157f, 0.005917f),
 				   DisplaySpaceMaxLerp = new Vector2(0.91735537f, 0.64497f);
 
+	public Rect DeSelectedArea = new Rect(-0.5f, -0.5f, 1.0f, 1.0f);
+	private Rect selectedArea;
+
+
+	private void SetSelectedCollider()
+	{
+		MyCollider.center = selectedArea.center;
+		MyCollider.size = selectedArea.size;
+	}
+	private void SetDeSelectedCollider()
+	{
+		MyCollider.center = DeSelectedArea.center;
+		MyCollider.size = DeSelectedArea.size;
+	}
 
 	void Awake()
 	{
@@ -73,13 +87,25 @@ public class Inventory : MonoBehaviour
 		Instance = this;
 
 		MyTransform = transform;
-		MyCollider = collider2D;
+		MyCollider = GetComponent<BoxCollider2D>();
+
+		Bounds bs = MyCollider.bounds;
+		selectedArea = new Rect(MyCollider.center.x - (0.5f * MyCollider.size.x),
+								MyCollider.center.y - (0.5f * MyCollider.size.y),
+								MyCollider.size.x, MyCollider.size.y);
+
+		MyCollider.center = DeSelectedArea.center;
+		MyCollider.size = DeSelectedArea.size;
 	}
 	void OnGUI()
 	{
 		//Calculate positioning info and draw the inventory background.
 		Texture2D texToUse = (IsSelected ? SelectedTex : DeSelectedTex);
+		if (!IsSelected)
+			SetSelectedCollider();
 		ScreenPositioningData data = new ScreenPositioningData(MyCollider);
+		if (!IsSelected)
+			SetDeSelectedCollider();
 
 		Vector2 center = (data.MinPos + data.MaxPos) * 0.5f;
 		Vector2 texSize = new Vector2(data.ScreenSizeScale.x * texToUse.width,
@@ -147,13 +173,29 @@ public class Inventory : MonoBehaviour
 							CurrentlySelectedTex);
 		}
 	}
+	void OnDrawGizmos()
+	{
+		Transform tr = transform;
+
+		Gizmos.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+		Gizmos.DrawCube(tr.position + new Vector3(DeSelectedArea.center.x * tr.lossyScale.x, DeSelectedArea.center.y * tr.lossyScale.y, 0.0f),
+						new Vector3(DeSelectedArea.size.x * tr.lossyScale.x, DeSelectedArea.size.y * tr.lossyScale.y, 1.0f));
+	}
 
 	public void OnClickedOn()
 	{
-		IsSelected = true;
+		if (!IsSelected)
+		{
+			IsSelected = true;
+			SetSelectedCollider();
+		}
 	}
 	public void OnClickedOff()
 	{
-		IsSelected = false;
+		if (IsSelected)
+		{
+			IsSelected = false;
+			SetDeSelectedCollider();
+		}
 	}
 }
