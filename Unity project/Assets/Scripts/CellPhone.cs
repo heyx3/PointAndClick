@@ -46,6 +46,7 @@ public class CellPhone : MonoBehaviour
 					 MessageSeparationLerp = 0.1f;
 		public Vector2 MessageBoxTopLeftLerp = new Vector2(0.547945f, 1.0f - 0.798077f),
 					   MessageBoxBottomRightLerp = new Vector2(0.712329f, 1.0f - 0.951923f);
+		public float TextHeightOffset = -45449.0f;
 		public Vector2 MessageButtonCenterLerp = new Vector2(0.863014f, 0.125f);
 		public float WaitTimeBeforeReply = 2.0f,
 					 PlayerTypeInterval = 0.1f;

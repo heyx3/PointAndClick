@@ -14,6 +14,13 @@ public class ScreenPositioningData
 	{
 		return min + (t * (max - min));
 	}
+	/// <summary>
+	/// Unity's Mathf.InverseLerp automatically clamps to 0-1 for some strange reason.
+	/// </summary>
+	private static float InverseLerp(float min, float max, float val)
+	{
+		return (val - min) / (max - min);
+	}
 	private static RenderTexture GameRendTex { get { return MainCamera.Instance.targetTexture; } }
 
 	public Vector2 MinPos, MaxPos;
@@ -48,8 +55,8 @@ public class ScreenPositioningData
 	/// </summary>
 	public Vector2 GetLerpPos(Vector2 screenPos)
 	{
-		return new Vector2(Mathf.InverseLerp(MinPos.x, MaxPos.x, screenPos.x),
-						   Mathf.InverseLerp(MinPos.y, MaxPos.y, screenPos.y));
+		return new Vector2(InverseLerp(MinPos.x, MaxPos.x, screenPos.x),
+						   InverseLerp(MinPos.y, MaxPos.y, screenPos.y));
 	}
 	/// <summary>
 	/// Gets the given X and Y size relative to the
@@ -57,8 +64,8 @@ public class ScreenPositioningData
 	/// </summary>
 	public Vector2 GetLerpSize(Vector2 screenSize)
 	{
-		return new Vector2(Mathf.InverseLerp(0.0f, MaxPos.x - MinPos.x, screenSize.x),
-						   Mathf.InverseLerp(0.0f, MaxPos.y - MinPos.y, screenSize.y));
+		return new Vector2(InverseLerp(0.0f, MaxPos.x - MinPos.x, screenSize.x),
+						   InverseLerp(0.0f, MaxPos.y - MinPos.y, screenSize.y));
 	}
 
 	/// <summary>

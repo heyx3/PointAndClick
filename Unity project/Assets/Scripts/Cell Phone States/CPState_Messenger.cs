@@ -14,7 +14,7 @@ public class CPState_Messenger : CPState_Base
 	/// <summary>
 	/// The most recent message that was sent. Set to -1 if no messages have been sent yet.
 	/// </summary>
-	public static int CurrentMessage = -1;
+	public static int CurrentMessage = 0;
 
 	private enum ScreenState
 	{
@@ -78,11 +78,12 @@ public class CPState_Messenger : CPState_Base
 												Mathf.Lerp(data.MinPos.y, data.MaxPos.y,
 														   Cellphone.BackgroundSpriteOffset.y * data.ScreenSizeScale.y));
 		Vector2 screenCellBottomRight = screenCellTopLeft + screenMsgAreaSize;
-		scrollViewPos = GUI.BeginScrollView(new Rect(screenCellTopLeft.x, screenCellTopLeft.y,
-													 screenMsgAreaSize.x, screenMsgAreaSize.y),
+		float textHeightOffset = data.GetLerpSize(new Vector2(0.0f, ScreenDat.TextHeightOffset)).y;
+		scrollViewPos = GUI.BeginScrollView(new Rect(screenCellTopLeft.x, screenCellTopLeft.y + textHeightOffset,
+													 screenMsgAreaSize.x, screenMsgAreaSize.y - textHeightOffset),
 											scrollViewPos,
 											new Rect(screenCellTopLeft.x, screenCellTopLeft.y - extraMsgSpace,
-													 screenMsgAreaSize.x, screenMsgAreaSize.y + extraMsgSpace),
+													 screenMsgAreaSize.x + 0.1f, screenMsgAreaSize.y + extraMsgSpace),
 											false, false);
 		//Now render the messages into the scrollable view.
 		float y = 1.0f - ScreenDat.FirstMessageYLerp;
