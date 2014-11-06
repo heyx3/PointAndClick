@@ -16,10 +16,10 @@ public class StaticTextClickableObject : ClickableObject
 		float x = transform.position.x;
 		float y = transform.position.y;
 
-		DialogController.Instance.objectRect = new Rect((Screen.width * 0.33333f) + (x * 2.0f),
-														(Screen.height * 0.25f) - y,
-														Screen.width * 0.25f,
-														Screen.height * 0.25f);
+//		DialogController.Instance.objectRect = new Rect((Screen.width * 0.33333f) + (x * 2.0f),
+//														(Screen.height * 0.25f) - y,
+//														Screen.width * 0.25f,
+//														Screen.height * 0.25f);
 
 		if (currentlySelected.HasValue)
 		{

@@ -69,10 +69,7 @@ public class DialogController : MonoBehaviour
 		void OnGUI ()
 		{
 		GUI.skin = textSkin;
-//		if (playerTalking[textTracker]){
 			GUI.Label (playerRect, currentText);
-//		}
-//		else GUI.Label(objectRect, currentText);
 	}
 
 		void Next ()

@@ -9,12 +9,15 @@ public class CPState_Static : CPState_Base
 {
 	public Texture2D Tex;
 
-	public CPState_Static(Texture2D tex) { Tex = tex; }
+	public CPState_Static(Texture2D tex)
+	{
+		Tex = tex;
+		SoundAssets.Instance.PlaySound(SoundAssets.Instance.BadButton);
+	}
 
 	public override CPState_Base OnGUI(ScreenPositioningData data)
 	{
 		data.GUIBackground(Tex, Cellphone.BackgroundSpriteBorderSize, Cellphone.BackgroundSpriteOffset);
-		SoundAssets.Instance.PlaySound(SoundAssets.Instance.BadButton);
 		return this;
 	}
 }
