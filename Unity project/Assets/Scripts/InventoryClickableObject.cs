@@ -12,6 +12,7 @@ public class InventoryClickableObject : ClickableObject
 	public override void OnClicked(Vector2 mouse, Inventory.InventoryObjects? currentlySelected){
 		Inventory.Instance.HasObjects.Remove(inventoryType);
 		Inventory.Instance.HasObjects.Add (inventoryType, true);
+		Destroy(this);
 
 		DialogController.Instance.SendMessage("StaticMessage", message);
 	}
