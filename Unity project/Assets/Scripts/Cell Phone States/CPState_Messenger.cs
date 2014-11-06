@@ -82,7 +82,8 @@ public class CPState_Messenger : CPState_Base
 													 screenMsgAreaSize.x, screenMsgAreaSize.y),
 											scrollViewPos,
 											new Rect(screenCellTopLeft.x, screenCellTopLeft.y - extraMsgSpace,
-													 screenMsgAreaSize.x, screenMsgAreaSize.y + extraMsgSpace));
+													 screenMsgAreaSize.x, screenMsgAreaSize.y + extraMsgSpace),
+											false, false);
 		//Now render the messages into the scrollable view.
 		float y = 1.0f - ScreenDat.FirstMessageYLerp;
 		for (int i = CurrentMessage; i >= 0; --i)
@@ -137,10 +138,16 @@ public class CPState_Messenger : CPState_Base
 							   new Vector2(ScreenDat.NewSendMessage.width, ScreenDat.NewSendMessage.height),
 							   new Vector2(), Cellphone.ButtonStyle, ScreenDat.NewSendMessage))
 			{
+				SoundAssets.Instance.PlaySound(SoundAssets.Instance.TextSent);
 				NextMessage();
 			}
 		}
-		else data.GUITexture(ScreenDat.MessageButtonCenterLerp, ScreenDat.NoSendMessage);
+		else if (data.GUIButton(ScreenDat.MessageButtonCenterLerp,
+								new Vector2(ScreenDat.NoSendMessage.width, ScreenDat.NoSendMessage.height),
+								new Vector2(), Cellphone.ButtonStyle, ScreenDat.NoSendMessage))
+		{
+			SoundAssets.Instance.PlaySound(SoundAssets.Instance.BadButton);
+		}
 
 
 		//Update screen state.

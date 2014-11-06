@@ -14,6 +14,7 @@ public class CPState_Static : CPState_Base
 	public override CPState_Base OnGUI(ScreenPositioningData data)
 	{
 		data.GUIBackground(Tex, Cellphone.BackgroundSpriteBorderSize, Cellphone.BackgroundSpriteOffset);
+		SoundAssets.Instance.PlaySound(SoundAssets.Instance.BadButton);
 		return this;
 	}
 }

@@ -127,7 +127,20 @@ public class CellPhone : MonoBehaviour
 	/// <summary>
 	/// Whether there is a new message for the player to see.
 	/// </summary>
-	public bool TriggerNewMessage { get; set; }
+	public bool TriggerNewMessage
+	{
+		get { return triggerNewMsg; }
+		set
+		{
+			if (value)
+			{
+				SoundAssets.Instance.PlaySound(SoundAssets.Instance.TextNotification);
+			}
+
+			triggerNewMsg = value;
+		}
+	}
+	private bool triggerNewMsg = false;
 
 	/// <summary>
 	/// Cached reference to this object's collider.

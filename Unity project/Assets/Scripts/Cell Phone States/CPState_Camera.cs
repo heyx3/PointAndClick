@@ -26,7 +26,12 @@ public class CPState_Camera : CPState_Base
 			if (canBePhotographed)
 			{
 				obj.OnPhotographed();
+				SoundAssets.Instance.PlaySound(SoundAssets.Instance.PhotoTaken);
 				return null;
+			}
+			else
+			{
+				SoundAssets.Instance.PlaySound(SoundAssets.Instance.BadButton);
 			}
 		}
 
